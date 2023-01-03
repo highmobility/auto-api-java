@@ -56,10 +56,10 @@ public class WakeUp {
             createBytes();
         }
     
-        WakeUpCommand(byte[] bytes) throws CommandParseException, PropertyParseException {
+        WakeUpCommand(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     
                     return null;

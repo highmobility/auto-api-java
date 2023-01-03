@@ -51,9 +51,9 @@ class KHistoricalTest : BaseTest() {
     }
     
     private fun testState(state: Historical.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.states[0].value == CommandResolver.resolve("0d0020010600040100010004000501000200010400050100020201a2000b010008000001598938e788"))
         assertTrue(state.states[1].value == CommandResolver.resolve("0d0023010b0004010001010c00040100010018000d01000a140240418000000000001c000d01000a12044081580000000000a2000b010008000001598938e788"))
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

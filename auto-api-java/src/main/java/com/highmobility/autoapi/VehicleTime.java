@@ -79,10 +79,10 @@ public class VehicleTime {
             return vehicleTime;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_VEHICLE_TIME: return vehicleTime.update(p);
                     }
@@ -92,21 +92,15 @@ public class VehicleTime {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            vehicleTime = builder.vehicleTime;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<Time> vehicleTime;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -114,8 +108,8 @@ public class VehicleTime {
              * @return The builder
              */
             public Builder setVehicleTime(Property<Time> vehicleTime) {
-                this.vehicleTime = vehicleTime.setIdentifier(PROPERTY_VEHICLE_TIME);
-                addProperty(this.vehicleTime);
+                Property property = vehicleTime.setIdentifier(PROPERTY_VEHICLE_TIME);
+                addProperty(property);
                 return this;
             }
         }

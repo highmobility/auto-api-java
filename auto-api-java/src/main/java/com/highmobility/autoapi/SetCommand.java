@@ -23,6 +23,7 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.exception.ParseException;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.Brand;
 import com.highmobility.value.Bytes;
@@ -65,36 +66,45 @@ public class SetCommand extends Command {
         return "Optional property does not exists for " + clazz.getSimpleName();
     }
 
-    SetCommand(byte[] bytes) throws CommandParseException {
+    SetCommand(byte[] bytes) throws ParseException {
         super(bytes);
-        if (bytes[Command.COMMAND_TYPE_POSITION] != Type.SET) throw new CommandParseException();
+        if (bytes[Command.COMMAND_TYPE_POSITION] != Type.SET) throw new ParseException();
     }
 
     public SetCommand(Builder builder) {
-        super(builder.identifier, Type.SET, builder.propertiesBuilder.toArray(new Property[0]));
+        super(builder.identifier, Type.SET, builder.getPropertiesArray());
     }
 
-    public static class Builder {
+    /**
+     * Use this builder to build an undefined capability.
+     */
+    public static final class BaseBuilder extends Builder<BaseBuilder> {
+        public BaseBuilder(Integer identifier) {
+            super(identifier);
+        }
+    }
+
+    public static class Builder<Child> {
         private final Integer identifier;
 
-        protected ArrayList<Property> propertiesBuilder = new ArrayList<>();
+        private ArrayList<Property> propertiesBuilder = new ArrayList<>();
 
         public Builder(Integer identifier) {
             this.identifier = identifier;
         }
 
-        public Builder addProperty(Property property) {
+        public Child addProperty(Property property) {
             propertiesBuilder.add(property);
-            return this;
+            return (Child) this;
         }
 
         /**
          * @param nonce The nonce used for the signature.
          * @return The nonce.
          */
-        public Builder setNonce(Bytes nonce) {
+        public Child setNonce(Bytes nonce) {
             addProperty(new Property<>(NONCE_IDENTIFIER, nonce));
-            return this;
+            return (Child) this;
         }
 
         /**
@@ -102,43 +112,47 @@ public class SetCommand extends Command {
          *                  signature property)
          * @return The builder.
          */
-        public Builder setSignature(Bytes signature) {
+        public Child setSignature(Bytes signature) {
             addProperty(new Property<>(SIGNATURE_IDENTIFIER, signature));
-            return this;
+            return (Child) this;
         }
 
         /**
          * @param timestamp The timestamp of when the data was transmitted from the car.
          * @return The builder.
          */
-        public Builder setTimestamp(Calendar timestamp) {
+        public Child setTimestamp(Calendar timestamp) {
             addProperty(new Property<>(TIMESTAMP_IDENTIFIER, timestamp));
-            return this;
+            return (Child) this;
         }
 
         /**
          * @param vin The car vin.
          * @return The builder.
          */
-        public Builder setVin(String vin) {
+        public Child setVin(String vin) {
             addProperty(new Property<>(VIN_IDENTIFIER, vin));
-            return this;
+            return (Child) this;
         }
 
         /**
          * @param brand The car brand.
          * @return The builder.
          */
-        public Builder setBrand(Brand brand) {
+        public Child setBrand(Brand brand) {
             addProperty(new Property<>(BRAND_IDENTIFIER, brand));
-            return this;
+            return (Child) this;
         }
 
-        protected SetCommand build() {
+        public SetCommand build() {
             return new SetCommand(this);
         }
 
-        protected Property[] getProperties() {
+        public Property[] getProperties() {
+            return propertiesBuilder.toArray(new Property[0]);
+        }
+
+        private Property[] getPropertiesArray() {
             return propertiesBuilder.toArray(new Property[0]);
         }
     }

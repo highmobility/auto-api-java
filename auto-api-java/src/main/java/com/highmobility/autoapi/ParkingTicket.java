@@ -194,10 +194,10 @@ public class ParkingTicket {
             createBytes();
         }
     
-        StartParking(byte[] bytes) throws CommandParseException, PropertyParseException {
+        StartParking(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: status.update(p);
                         case PROPERTY_OPERATOR_NAME: return operatorName.update(p);
@@ -233,10 +233,10 @@ public class ParkingTicket {
             createBytes();
         }
     
-        EndParking(byte[] bytes) throws CommandParseException, PropertyParseException {
+        EndParking(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     
                     return null;
@@ -293,10 +293,10 @@ public class ParkingTicket {
             return ticketEndTime;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
                         case PROPERTY_OPERATOR_NAME: return operatorName.update(p);
@@ -310,29 +310,15 @@ public class ParkingTicket {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            status = builder.status;
-            operatorName = builder.operatorName;
-            operatorTicketID = builder.operatorTicketID;
-            ticketStartTime = builder.ticketStartTime;
-            ticketEndTime = builder.ticketEndTime;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<Status> status;
-            private Property<String> operatorName;
-            private Property<String> operatorTicketID;
-            private Property<Calendar> ticketStartTime;
-            private Property<Calendar> ticketEndTime;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -340,8 +326,8 @@ public class ParkingTicket {
              * @return The builder
              */
             public Builder setStatus(Property<Status> status) {
-                this.status = status.setIdentifier(PROPERTY_STATUS);
-                addProperty(this.status);
+                Property property = status.setIdentifier(PROPERTY_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -350,8 +336,8 @@ public class ParkingTicket {
              * @return The builder
              */
             public Builder setOperatorName(Property<String> operatorName) {
-                this.operatorName = operatorName.setIdentifier(PROPERTY_OPERATOR_NAME);
-                addProperty(this.operatorName);
+                Property property = operatorName.setIdentifier(PROPERTY_OPERATOR_NAME);
+                addProperty(property);
                 return this;
             }
             
@@ -360,8 +346,8 @@ public class ParkingTicket {
              * @return The builder
              */
             public Builder setOperatorTicketID(Property<String> operatorTicketID) {
-                this.operatorTicketID = operatorTicketID.setIdentifier(PROPERTY_OPERATOR_TICKET_ID);
-                addProperty(this.operatorTicketID);
+                Property property = operatorTicketID.setIdentifier(PROPERTY_OPERATOR_TICKET_ID);
+                addProperty(property);
                 return this;
             }
             
@@ -370,8 +356,8 @@ public class ParkingTicket {
              * @return The builder
              */
             public Builder setTicketStartTime(Property<Calendar> ticketStartTime) {
-                this.ticketStartTime = ticketStartTime.setIdentifier(PROPERTY_TICKET_START_TIME);
-                addProperty(this.ticketStartTime);
+                Property property = ticketStartTime.setIdentifier(PROPERTY_TICKET_START_TIME);
+                addProperty(property);
                 return this;
             }
             
@@ -380,8 +366,8 @@ public class ParkingTicket {
              * @return The builder
              */
             public Builder setTicketEndTime(Property<Calendar> ticketEndTime) {
-                this.ticketEndTime = ticketEndTime.setIdentifier(PROPERTY_TICKET_END_TIME);
-                addProperty(this.ticketEndTime);
+                Property property = ticketEndTime.setIdentifier(PROPERTY_TICKET_END_TIME);
+                addProperty(property);
                 return this;
             }
         }

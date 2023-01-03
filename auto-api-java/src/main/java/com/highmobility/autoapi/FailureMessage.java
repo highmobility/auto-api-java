@@ -123,10 +123,10 @@ public class FailureMessage {
             return false;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_FAILED_MESSAGE_ID: return failedMessageID.update(p);
                         case PROPERTY_FAILED_MESSAGE_TYPE: return failedMessageType.update(p);
@@ -140,29 +140,15 @@ public class FailureMessage {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            failedMessageID = builder.failedMessageID;
-            failedMessageType = builder.failedMessageType;
-            failureReason = builder.failureReason;
-            failureDescription = builder.failureDescription;
-            failedPropertyIDs = builder.failedPropertyIDs;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private PropertyInteger failedMessageID;
-            private PropertyInteger failedMessageType;
-            private Property<FailureReason> failureReason;
-            private Property<String> failureDescription;
-            private Property<Bytes> failedPropertyIDs;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -170,8 +156,8 @@ public class FailureMessage {
              * @return The builder
              */
             public Builder setFailedMessageID(Property<Integer> failedMessageID) {
-                this.failedMessageID = new PropertyInteger(PROPERTY_FAILED_MESSAGE_ID, false, 2, failedMessageID);
-                addProperty(this.failedMessageID);
+                Property property = new PropertyInteger(PROPERTY_FAILED_MESSAGE_ID, false, 2, failedMessageID);
+                addProperty(property);
                 return this;
             }
             
@@ -180,8 +166,8 @@ public class FailureMessage {
              * @return The builder
              */
             public Builder setFailedMessageType(Property<Integer> failedMessageType) {
-                this.failedMessageType = new PropertyInteger(PROPERTY_FAILED_MESSAGE_TYPE, false, 1, failedMessageType);
-                addProperty(this.failedMessageType);
+                Property property = new PropertyInteger(PROPERTY_FAILED_MESSAGE_TYPE, false, 1, failedMessageType);
+                addProperty(property);
                 return this;
             }
             
@@ -190,8 +176,8 @@ public class FailureMessage {
              * @return The builder
              */
             public Builder setFailureReason(Property<FailureReason> failureReason) {
-                this.failureReason = failureReason.setIdentifier(PROPERTY_FAILURE_REASON);
-                addProperty(this.failureReason);
+                Property property = failureReason.setIdentifier(PROPERTY_FAILURE_REASON);
+                addProperty(property);
                 return this;
             }
             
@@ -200,8 +186,8 @@ public class FailureMessage {
              * @return The builder
              */
             public Builder setFailureDescription(Property<String> failureDescription) {
-                this.failureDescription = failureDescription.setIdentifier(PROPERTY_FAILURE_DESCRIPTION);
-                addProperty(this.failureDescription);
+                Property property = failureDescription.setIdentifier(PROPERTY_FAILURE_DESCRIPTION);
+                addProperty(property);
                 return this;
             }
             
@@ -210,8 +196,8 @@ public class FailureMessage {
              * @return The builder
              */
             public Builder setFailedPropertyIDs(Property<Bytes> failedPropertyIDs) {
-                this.failedPropertyIDs = failedPropertyIDs.setIdentifier(PROPERTY_FAILED_PROPERTY_IDS);
-                addProperty(this.failedPropertyIDs);
+                Property property = failedPropertyIDs.setIdentifier(PROPERTY_FAILED_PROPERTY_IDS);
+                addProperty(property);
                 return this;
             }
         }

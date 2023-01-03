@@ -27,11 +27,13 @@ import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.EngineType;
+import com.highmobility.autoapi.value.measurement.Mass;
 import com.highmobility.autoapi.value.measurement.Power;
 import com.highmobility.autoapi.value.measurement.Torque;
 import com.highmobility.autoapi.value.measurement.Volume;
 import com.highmobility.value.Bytes;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
@@ -63,6 +65,16 @@ public class VehicleInformation {
     public static final byte PROPERTY_TIMEFORMAT = 0x15;
     public static final byte PROPERTY_DRIVE = 0x16;
     public static final byte PROPERTY_POWERTRAIN_SECONDARY = 0x17;
+    public static final byte PROPERTY_FUEL_TANK_CAPACITY = 0x18;
+    public static final byte PROPERTY_BUILD_DATE = 0x19;
+    public static final byte PROPERTY_COUNTRY_CODE = 0x1a;
+    public static final byte PROPERTY_MODEL_KEY = 0x1b;
+    public static final byte PROPERTY_DATA_QUALITY = 0x1c;
+    public static final byte PROPERTY_EXTRA_EQUIPMENT_CODES = 0x1d;
+    public static final byte PROPERTY_SERIES = 0x1e;
+    public static final byte PROPERTY_LAST_DATA_TRANSFER_DATE = 0x1f;
+    public static final byte PROPERTY_TIME_ZONE = 0x20;
+    public static final byte PROPERTY_VEHICLE_MASS = 0x21;
 
     /**
      * Get vehicle information
@@ -149,6 +161,16 @@ public class VehicleInformation {
         Property<Timeformat> timeformat = new Property<>(Timeformat.class, PROPERTY_TIMEFORMAT);
         Property<Drive> drive = new Property<>(Drive.class, PROPERTY_DRIVE);
         Property<EngineType> powertrainSecondary = new Property<>(EngineType.class, PROPERTY_POWERTRAIN_SECONDARY);
+        Property<Volume> fuelTankCapacity = new Property<>(Volume.class, PROPERTY_FUEL_TANK_CAPACITY);
+        Property<Calendar> buildDate = new Property<>(Calendar.class, PROPERTY_BUILD_DATE);
+        Property<String> countryCode = new Property<>(String.class, PROPERTY_COUNTRY_CODE);
+        Property<String> modelKey = new Property<>(String.class, PROPERTY_MODEL_KEY);
+        Property<DataQuality> dataQuality = new Property<>(DataQuality.class, PROPERTY_DATA_QUALITY);
+        List<Property<String>> extraEquipmentCodes;
+        Property<String> series = new Property<>(String.class, PROPERTY_SERIES);
+        Property<Calendar> lastDataTransferDate = new Property<>(Calendar.class, PROPERTY_LAST_DATA_TRANSFER_DATE);
+        Property<TimeZone> timeZone = new Property<>(TimeZone.class, PROPERTY_TIME_ZONE);
+        Property<Mass> vehicleMass = new Property<>(Mass.class, PROPERTY_VEHICLE_MASS);
     
         /**
          * @return Type of the (primary) powertrain
@@ -299,13 +321,84 @@ public class VehicleInformation {
             return powertrainSecondary;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        /**
+         * @return The fuel tank capacity measured in liters
+         */
+        public Property<Volume> getFuelTankCapacity() {
+            return fuelTankCapacity;
+        }
+    
+        /**
+         * @return Build (construction) date of the vehicle.
+         */
+        public Property<Calendar> getBuildDate() {
+            return buildDate;
+        }
+    
+        /**
+         * @return The country code of the vehicle.
+         */
+        public Property<String> getCountryCode() {
+            return countryCode;
+        }
+    
+        /**
+         * @return The model key of the vehicle.
+         */
+        public Property<String> getModelKey() {
+            return modelKey;
+        }
+    
+        /**
+         * @return Evaluation of the timeliness of the available vehicle data.
+         */
+        public Property<DataQuality> getDataQuality() {
+            return dataQuality;
+        }
+    
+        /**
+         * @return Codes of the extra equipment the vehicle has
+         */
+        public List<Property<String>> getExtraEquipmentCodes() {
+            return extraEquipmentCodes;
+        }
+    
+        /**
+         * @return The vehicle model's series
+         */
+        public Property<String> getSeries() {
+            return series;
+        }
+    
+        /**
+         * @return The last trip date
+         */
+        public Property<Calendar> getLastDataTransferDate() {
+            return lastDataTransferDate;
+        }
+    
+        /**
+         * @return Time zone setting in the vehicle.
+         */
+        public Property<TimeZone> getTimeZone() {
+            return timeZone;
+        }
+    
+        /**
+         * @return Vehicle mass.
+         */
+        public Property<Mass> getVehicleMass() {
+            return vehicleMass;
+        }
+    
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<String>> equipmentsBuilder = new ArrayList<>();
+            final ArrayList<Property<String>> extraEquipmentCodesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_POWERTRAIN: return powertrain.update(p);
                         case PROPERTY_MODEL_NAME: return modelName.update(p);
@@ -331,6 +424,19 @@ public class VehicleInformation {
                         case PROPERTY_TIMEFORMAT: return timeformat.update(p);
                         case PROPERTY_DRIVE: return drive.update(p);
                         case PROPERTY_POWERTRAIN_SECONDARY: return powertrainSecondary.update(p);
+                        case PROPERTY_FUEL_TANK_CAPACITY: return fuelTankCapacity.update(p);
+                        case PROPERTY_BUILD_DATE: return buildDate.update(p);
+                        case PROPERTY_COUNTRY_CODE: return countryCode.update(p);
+                        case PROPERTY_MODEL_KEY: return modelKey.update(p);
+                        case PROPERTY_DATA_QUALITY: return dataQuality.update(p);
+                        case PROPERTY_EXTRA_EQUIPMENT_CODES:
+                            Property<String> extraEquipmentCode = new Property<>(String.class, p);
+                            extraEquipmentCodesBuilder.add(extraEquipmentCode);
+                            return extraEquipmentCode;
+                        case PROPERTY_SERIES: return series.update(p);
+                        case PROPERTY_LAST_DATA_TRANSFER_DATE: return lastDataTransferDate.update(p);
+                        case PROPERTY_TIME_ZONE: return timeZone.update(p);
+                        case PROPERTY_VEHICLE_MASS: return vehicleMass.update(p);
                     }
     
                     return null;
@@ -338,63 +444,18 @@ public class VehicleInformation {
             }
     
             equipments = equipmentsBuilder;
+            extraEquipmentCodes = extraEquipmentCodesBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            powertrain = builder.powertrain;
-            modelName = builder.modelName;
-            name = builder.name;
-            licensePlate = builder.licensePlate;
-            salesDesignation = builder.salesDesignation;
-            modelYear = builder.modelYear;
-            colourName = builder.colourName;
-            powerInKW = builder.powerInKW;
-            numberOfDoors = builder.numberOfDoors;
-            numberOfSeats = builder.numberOfSeats;
-            engineVolume = builder.engineVolume;
-            engineMaxTorque = builder.engineMaxTorque;
-            gearbox = builder.gearbox;
-            displayUnit = builder.displayUnit;
-            driverSeatLocation = builder.driverSeatLocation;
-            equipments = builder.equipments;
-            power = builder.power;
-            language = builder.language;
-            timeformat = builder.timeformat;
-            drive = builder.drive;
-            powertrainSecondary = builder.powertrainSecondary;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<EngineType> powertrain;
-            private Property<String> modelName;
-            private Property<String> name;
-            private Property<String> licensePlate;
-            private Property<String> salesDesignation;
-            private PropertyInteger modelYear;
-            private Property<String> colourName;
-            private Property<Power> powerInKW;
-            private PropertyInteger numberOfDoors;
-            private PropertyInteger numberOfSeats;
-            private Property<Volume> engineVolume;
-            private Property<Torque> engineMaxTorque;
-            private Property<Gearbox> gearbox;
-            private Property<DisplayUnit> displayUnit;
-            private Property<DriverSeatLocation> driverSeatLocation;
-            private final List<Property<String>> equipments = new ArrayList<>();
-            private Property<Power> power;
-            private Property<String> language;
-            private Property<Timeformat> timeformat;
-            private Property<Drive> drive;
-            private Property<EngineType> powertrainSecondary;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -402,8 +463,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setPowertrain(Property<EngineType> powertrain) {
-                this.powertrain = powertrain.setIdentifier(PROPERTY_POWERTRAIN);
-                addProperty(this.powertrain);
+                Property property = powertrain.setIdentifier(PROPERTY_POWERTRAIN);
+                addProperty(property);
                 return this;
             }
             
@@ -412,8 +473,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setModelName(Property<String> modelName) {
-                this.modelName = modelName.setIdentifier(PROPERTY_MODEL_NAME);
-                addProperty(this.modelName);
+                Property property = modelName.setIdentifier(PROPERTY_MODEL_NAME);
+                addProperty(property);
                 return this;
             }
             
@@ -422,8 +483,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setName(Property<String> name) {
-                this.name = name.setIdentifier(PROPERTY_NAME);
-                addProperty(this.name);
+                Property property = name.setIdentifier(PROPERTY_NAME);
+                addProperty(property);
                 return this;
             }
             
@@ -432,8 +493,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setLicensePlate(Property<String> licensePlate) {
-                this.licensePlate = licensePlate.setIdentifier(PROPERTY_LICENSE_PLATE);
-                addProperty(this.licensePlate);
+                Property property = licensePlate.setIdentifier(PROPERTY_LICENSE_PLATE);
+                addProperty(property);
                 return this;
             }
             
@@ -442,8 +503,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setSalesDesignation(Property<String> salesDesignation) {
-                this.salesDesignation = salesDesignation.setIdentifier(PROPERTY_SALES_DESIGNATION);
-                addProperty(this.salesDesignation);
+                Property property = salesDesignation.setIdentifier(PROPERTY_SALES_DESIGNATION);
+                addProperty(property);
                 return this;
             }
             
@@ -452,8 +513,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setModelYear(Property<Integer> modelYear) {
-                this.modelYear = new PropertyInteger(PROPERTY_MODEL_YEAR, false, 2, modelYear);
-                addProperty(this.modelYear);
+                Property property = new PropertyInteger(PROPERTY_MODEL_YEAR, false, 2, modelYear);
+                addProperty(property);
                 return this;
             }
             
@@ -462,8 +523,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setColourName(Property<String> colourName) {
-                this.colourName = colourName.setIdentifier(PROPERTY_COLOUR_NAME);
-                addProperty(this.colourName);
+                Property property = colourName.setIdentifier(PROPERTY_COLOUR_NAME);
+                addProperty(property);
                 return this;
             }
             
@@ -474,8 +535,8 @@ public class VehicleInformation {
              */
             @Deprecated
             public Builder setPowerInKW(Property<Power> powerInKW) {
-                this.powerInKW = powerInKW.setIdentifier(PROPERTY_POWER_IN_KW);
-                addProperty(this.powerInKW);
+                Property property = powerInKW.setIdentifier(PROPERTY_POWER_IN_KW);
+                addProperty(property);
                 return this;
             }
             
@@ -484,8 +545,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setNumberOfDoors(Property<Integer> numberOfDoors) {
-                this.numberOfDoors = new PropertyInteger(PROPERTY_NUMBER_OF_DOORS, false, 1, numberOfDoors);
-                addProperty(this.numberOfDoors);
+                Property property = new PropertyInteger(PROPERTY_NUMBER_OF_DOORS, false, 1, numberOfDoors);
+                addProperty(property);
                 return this;
             }
             
@@ -494,8 +555,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setNumberOfSeats(Property<Integer> numberOfSeats) {
-                this.numberOfSeats = new PropertyInteger(PROPERTY_NUMBER_OF_SEATS, false, 1, numberOfSeats);
-                addProperty(this.numberOfSeats);
+                Property property = new PropertyInteger(PROPERTY_NUMBER_OF_SEATS, false, 1, numberOfSeats);
+                addProperty(property);
                 return this;
             }
             
@@ -504,8 +565,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setEngineVolume(Property<Volume> engineVolume) {
-                this.engineVolume = engineVolume.setIdentifier(PROPERTY_ENGINE_VOLUME);
-                addProperty(this.engineVolume);
+                Property property = engineVolume.setIdentifier(PROPERTY_ENGINE_VOLUME);
+                addProperty(property);
                 return this;
             }
             
@@ -514,8 +575,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setEngineMaxTorque(Property<Torque> engineMaxTorque) {
-                this.engineMaxTorque = engineMaxTorque.setIdentifier(PROPERTY_ENGINE_MAX_TORQUE);
-                addProperty(this.engineMaxTorque);
+                Property property = engineMaxTorque.setIdentifier(PROPERTY_ENGINE_MAX_TORQUE);
+                addProperty(property);
                 return this;
             }
             
@@ -524,8 +585,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setGearbox(Property<Gearbox> gearbox) {
-                this.gearbox = gearbox.setIdentifier(PROPERTY_GEARBOX);
-                addProperty(this.gearbox);
+                Property property = gearbox.setIdentifier(PROPERTY_GEARBOX);
+                addProperty(property);
                 return this;
             }
             
@@ -534,8 +595,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setDisplayUnit(Property<DisplayUnit> displayUnit) {
-                this.displayUnit = displayUnit.setIdentifier(PROPERTY_DISPLAY_UNIT);
-                addProperty(this.displayUnit);
+                Property property = displayUnit.setIdentifier(PROPERTY_DISPLAY_UNIT);
+                addProperty(property);
                 return this;
             }
             
@@ -544,8 +605,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setDriverSeatLocation(Property<DriverSeatLocation> driverSeatLocation) {
-                this.driverSeatLocation = driverSeatLocation.setIdentifier(PROPERTY_DRIVER_SEAT_LOCATION);
-                addProperty(this.driverSeatLocation);
+                Property property = driverSeatLocation.setIdentifier(PROPERTY_DRIVER_SEAT_LOCATION);
+                addProperty(property);
                 return this;
             }
             
@@ -556,7 +617,6 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setEquipments(Property<String>[] equipments) {
-                this.equipments.clear();
                 for (int i = 0; i < equipments.length; i++) {
                     addEquipment(equipments[i]);
                 }
@@ -573,7 +633,6 @@ public class VehicleInformation {
             public Builder addEquipment(Property<String> equipment) {
                 equipment.setIdentifier(PROPERTY_EQUIPMENTS);
                 addProperty(equipment);
-                equipments.add(equipment);
                 return this;
             }
             
@@ -582,8 +641,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setPower(Property<Power> power) {
-                this.power = power.setIdentifier(PROPERTY_POWER);
-                addProperty(this.power);
+                Property property = power.setIdentifier(PROPERTY_POWER);
+                addProperty(property);
                 return this;
             }
             
@@ -592,8 +651,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setLanguage(Property<String> language) {
-                this.language = language.setIdentifier(PROPERTY_LANGUAGE);
-                addProperty(this.language);
+                Property property = language.setIdentifier(PROPERTY_LANGUAGE);
+                addProperty(property);
                 return this;
             }
             
@@ -602,8 +661,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setTimeformat(Property<Timeformat> timeformat) {
-                this.timeformat = timeformat.setIdentifier(PROPERTY_TIMEFORMAT);
-                addProperty(this.timeformat);
+                Property property = timeformat.setIdentifier(PROPERTY_TIMEFORMAT);
+                addProperty(property);
                 return this;
             }
             
@@ -612,8 +671,8 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setDrive(Property<Drive> drive) {
-                this.drive = drive.setIdentifier(PROPERTY_DRIVE);
-                addProperty(this.drive);
+                Property property = drive.setIdentifier(PROPERTY_DRIVE);
+                addProperty(property);
                 return this;
             }
             
@@ -622,8 +681,124 @@ public class VehicleInformation {
              * @return The builder
              */
             public Builder setPowertrainSecondary(Property<EngineType> powertrainSecondary) {
-                this.powertrainSecondary = powertrainSecondary.setIdentifier(PROPERTY_POWERTRAIN_SECONDARY);
-                addProperty(this.powertrainSecondary);
+                Property property = powertrainSecondary.setIdentifier(PROPERTY_POWERTRAIN_SECONDARY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param fuelTankCapacity The fuel tank capacity measured in liters
+             * @return The builder
+             */
+            public Builder setFuelTankCapacity(Property<Volume> fuelTankCapacity) {
+                Property property = fuelTankCapacity.setIdentifier(PROPERTY_FUEL_TANK_CAPACITY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param buildDate Build (construction) date of the vehicle.
+             * @return The builder
+             */
+            public Builder setBuildDate(Property<Calendar> buildDate) {
+                Property property = buildDate.setIdentifier(PROPERTY_BUILD_DATE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param countryCode The country code of the vehicle.
+             * @return The builder
+             */
+            public Builder setCountryCode(Property<String> countryCode) {
+                Property property = countryCode.setIdentifier(PROPERTY_COUNTRY_CODE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param modelKey The model key of the vehicle.
+             * @return The builder
+             */
+            public Builder setModelKey(Property<String> modelKey) {
+                Property property = modelKey.setIdentifier(PROPERTY_MODEL_KEY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param dataQuality Evaluation of the timeliness of the available vehicle data.
+             * @return The builder
+             */
+            public Builder setDataQuality(Property<DataQuality> dataQuality) {
+                Property property = dataQuality.setIdentifier(PROPERTY_DATA_QUALITY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * Add an array of extra equipment codes
+             * 
+             * @param extraEquipmentCodes The extra equipment codes. Codes of the extra equipment the vehicle has
+             * @return The builder
+             */
+            public Builder setExtraEquipmentCodes(Property<String>[] extraEquipmentCodes) {
+                for (int i = 0; i < extraEquipmentCodes.length; i++) {
+                    addExtraEquipmentCode(extraEquipmentCodes[i]);
+                }
+            
+                return this;
+            }
+            
+            /**
+             * Add a single extra equipment code
+             * 
+             * @param extraEquipmentCode The extra equipment code. Codes of the extra equipment the vehicle has
+             * @return The builder
+             */
+            public Builder addExtraEquipmentCode(Property<String> extraEquipmentCode) {
+                extraEquipmentCode.setIdentifier(PROPERTY_EXTRA_EQUIPMENT_CODES);
+                addProperty(extraEquipmentCode);
+                return this;
+            }
+            
+            /**
+             * @param series The vehicle model's series
+             * @return The builder
+             */
+            public Builder setSeries(Property<String> series) {
+                Property property = series.setIdentifier(PROPERTY_SERIES);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param lastDataTransferDate The last trip date
+             * @return The builder
+             */
+            public Builder setLastDataTransferDate(Property<Calendar> lastDataTransferDate) {
+                Property property = lastDataTransferDate.setIdentifier(PROPERTY_LAST_DATA_TRANSFER_DATE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param timeZone Time zone setting in the vehicle.
+             * @return The builder
+             */
+            public Builder setTimeZone(Property<TimeZone> timeZone) {
+                Property property = timeZone.setIdentifier(PROPERTY_TIME_ZONE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param vehicleMass Vehicle mass.
+             * @return The builder
+             */
+            public Builder setVehicleMass(Property<Mass> vehicleMass) {
+                Property property = vehicleMass.setIdentifier(PROPERTY_VEHICLE_MASS);
+                addProperty(property);
                 return this;
             }
         }
@@ -787,6 +962,82 @@ public class VehicleInformation {
         private final byte value;
     
         Drive(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum DataQuality implements ByteEnum {
+        /**
+         * No data available
+         */
+        NO_DATA((byte) 0x00),
+        /**
+         * Data transmitted within the last 48h
+         */
+        UP_TO_DATE((byte) 0x01),
+        /**
+         * Data transmitted within the last 7 days, but not within the last 48h
+         */
+        ALMOST_UP_TO_DATE((byte) 0x02),
+        /**
+         * No data transferred within the last 7 days
+         */
+        OUT_OF_DATE((byte) 0x03);
+    
+        public static DataQuality fromByte(byte byteValue) throws CommandParseException {
+            DataQuality[] values = DataQuality.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                DataQuality state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(DataQuality.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        DataQuality(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum TimeZone implements ByteEnum {
+        WINTERTIME((byte) 0x00),
+        SUMMERTIME((byte) 0x01),
+        UTC((byte) 0x02),
+        MANUAL((byte) 0x03);
+    
+        public static TimeZone fromByte(byte byteValue) throws CommandParseException {
+            TimeZone[] values = TimeZone.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                TimeZone state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(TimeZone.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        TimeZone(byte value) {
             this.value = value;
         }
     

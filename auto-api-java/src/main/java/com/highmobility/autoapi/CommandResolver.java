@@ -616,6 +616,14 @@ public class CommandResolver {
                     }
                     break;
                 }
+                case UNIVERSAL: {
+                    if (type == Type.SET) {
+                    
+                    } else if (type == Type.GET) {
+                        command = new Universal.GetUniversalProperties(bytes, true);
+                    }
+                    break;
+                }
                 case THEFT_ALARM: {
                     if (type == Type.SET) {
                         if (getEnvironment() == Environment.OWNER) {

@@ -90,10 +90,10 @@ public class Historical {
             createBytes();
         }
     
-        RequestStates(byte[] bytes) throws CommandParseException, PropertyParseException {
+        RequestStates(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_CAPABILITY_ID: return capabilityID.update(p);
                         case PROPERTY_START_DATE: return startDate.update(p);
@@ -146,10 +146,10 @@ public class Historical {
             createBytes();
         }
     
-        GetTrips(byte[] bytes) throws CommandParseException, PropertyParseException {
+        GetTrips(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_CAPABILITY_ID: capabilityID.update(p);
                         case PROPERTY_START_DATE: return startDate.update(p);
@@ -202,10 +202,10 @@ public class Historical {
             createBytes();
         }
     
-        GetChargingSessions(byte[] bytes) throws CommandParseException, PropertyParseException {
+        GetChargingSessions(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_CAPABILITY_ID: capabilityID.update(p);
                         case PROPERTY_START_DATE: return startDate.update(p);
@@ -234,13 +234,13 @@ public class Historical {
             return states;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<Command>> statesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATES:
                             Property<Command> state = new Property<>(Command.class, p);
@@ -255,21 +255,15 @@ public class Historical {
             states = statesBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            states = builder.states;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private final List<Property<Command>> states = new ArrayList<>();
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -279,7 +273,6 @@ public class Historical {
              * @return The builder
              */
             public Builder setStates(Property<Command>[] states) {
-                this.states.clear();
                 for (int i = 0; i < states.length; i++) {
                     addState(states[i]);
                 }
@@ -295,7 +288,6 @@ public class Historical {
             public Builder addState(Property<Command> state) {
                 state.setIdentifier(PROPERTY_STATES);
                 addProperty(state);
-                states.add(state);
                 return this;
             }
         }

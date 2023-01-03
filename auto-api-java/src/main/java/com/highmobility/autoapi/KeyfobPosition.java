@@ -84,10 +84,10 @@ public class KeyfobPosition {
             return location;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_LOCATION: return location.update(p);
                     }
@@ -104,7 +104,8 @@ public class KeyfobPosition {
         OUTSIDE_IN_FRONT_OF_CAR((byte) 0x02),
         OUTSIDE_PASSENGER_SIDE((byte) 0x03),
         OUTSIDE_BEHIND_CAR((byte) 0x04),
-        INSIDE_CAR((byte) 0x05);
+        INSIDE_CAR((byte) 0x05),
+        NOT_INSIDE((byte) 0x06);
     
         public static Location fromByte(byte byteValue) throws CommandParseException {
             Location[] values = Location.values();

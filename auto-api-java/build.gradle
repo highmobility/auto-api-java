@@ -14,10 +14,8 @@ ext.ver = [
         "hmkit-auto-api"    : "13.1.1"
 ]
 
-ext.deps = [
-        "utils"   : "com.high-mobility:hmkit-utils:${ver."hmkit-utils"}",
-        "findBugs": 'com.google.code.findbugs:jsr305:3.0.2'
-]
+ext.deps = ["utils"   : "com.high-mobility:hmkit-utils:${ver."hmkit-utils"}",
+            "findBugs": 'com.google.code.findbugs:jsr305:3.0.2']
 
 dependencies {
     if (project.hasProperty('depLocation') == true && project.depLocation == 0) {

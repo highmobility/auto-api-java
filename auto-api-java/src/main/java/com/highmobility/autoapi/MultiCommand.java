@@ -69,13 +69,13 @@ public class MultiCommand {
             createBytes();
         }
     
-        MultiCommandCommand(byte[] bytes) throws CommandParseException, PropertyParseException {
+        MultiCommandCommand(byte[] bytes) throws PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<Command>> multiCommandsBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_MULTI_COMMANDS) {
                         Property<Command> multiCommand = new Property<>(Command.class, p);
                         multiCommandsBuilder.add(multiCommand);
@@ -106,13 +106,13 @@ public class MultiCommand {
             return multiStates;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<Command>> multiStatesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_MULTI_STATES:
                             Property<Command> multiState = new Property<>(Command.class, p);
@@ -127,21 +127,15 @@ public class MultiCommand {
             multiStates = multiStatesBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            multiStates = builder.multiStates;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private final List<Property<Command>> multiStates = new ArrayList<>();
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -151,7 +145,6 @@ public class MultiCommand {
              * @return The builder
              */
             public Builder setMultiStates(Property<Command>[] multiStates) {
-                this.multiStates.clear();
                 for (int i = 0; i < multiStates.length; i++) {
                     addMultiState(multiStates[i]);
                 }
@@ -167,7 +160,6 @@ public class MultiCommand {
             public Builder addMultiState(Property<Command> multiState) {
                 multiState.setIdentifier(PROPERTY_MULTI_STATES);
                 addProperty(multiState);
-                multiStates.add(multiState);
                 return this;
             }
         }

@@ -81,7 +81,6 @@ class KChargingSessionTest : BaseTest() {
     }
     
     private fun testState(state: ChargingSession.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.publicChargingPoints[0].value?.city == "Berlin")
         assertTrue(state.publicChargingPoints[0].value?.postalCode == "10997")
         assertTrue(state.publicChargingPoints[0].value?.street == "Skalitzer Straße 68")
@@ -113,5 +112,6 @@ class KChargingSessionTest : BaseTest() {
         assertTrue(state.location.value?.municipality == "Berlin")
         assertTrue(state.location.value?.formattedAddress == "Skalitzer Straße 68, 10997 Berlin, Germany")
         assertTrue(state.location.value?.streetAddress == "Skalitzer Straße 68")
+        assertTrue(bytesTheSame(state, bytes))
     }
 }

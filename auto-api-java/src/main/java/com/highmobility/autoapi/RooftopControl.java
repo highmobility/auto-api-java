@@ -42,6 +42,7 @@ public class RooftopControl {
     public static final byte PROPERTY_SUNROOF_TILT_STATE = 0x04;
     public static final byte PROPERTY_SUNROOF_STATE = 0x05;
     public static final byte PROPERTY_SUNROOF_RAIN_EVENT = 0x06;
+    public static final byte PROPERTY_TILT_POSITION = 0x07;
 
     /**
      * Get Rooftop Control property availability information
@@ -211,10 +212,10 @@ public class RooftopControl {
             createBytes();
         }
     
-        ControlRooftop(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ControlRooftop(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_DIMMING: return dimming.update(p);
                         case PROPERTY_POSITION: return position.update(p);
@@ -242,6 +243,7 @@ public class RooftopControl {
         Property<SunroofTiltState> sunroofTiltState = new Property<>(SunroofTiltState.class, PROPERTY_SUNROOF_TILT_STATE);
         Property<SunroofState> sunroofState = new Property<>(SunroofState.class, PROPERTY_SUNROOF_STATE);
         Property<SunroofRainEvent> sunroofRainEvent = new Property<>(SunroofRainEvent.class, PROPERTY_SUNROOF_RAIN_EVENT);
+        Property<Double> tiltPosition = new Property<>(Double.class, PROPERTY_TILT_POSITION);
     
         /**
          * @return 1.0 (100%) is opaque, 0.0 (0%) is transparent
@@ -285,10 +287,17 @@ public class RooftopControl {
             return sunroofRainEvent;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        /**
+         * @return 1.0 (100%) is fully tilted, 0.0 (0%) is not
+         */
+        public Property<Double> getTiltPosition() {
+            return tiltPosition;
+        }
+    
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_DIMMING: return dimming.update(p);
                         case PROPERTY_POSITION: return position.update(p);
@@ -296,6 +305,7 @@ public class RooftopControl {
                         case PROPERTY_SUNROOF_TILT_STATE: return sunroofTiltState.update(p);
                         case PROPERTY_SUNROOF_STATE: return sunroofState.update(p);
                         case PROPERTY_SUNROOF_RAIN_EVENT: return sunroofRainEvent.update(p);
+                        case PROPERTY_TILT_POSITION: return tiltPosition.update(p);
                     }
     
                     return null;
@@ -303,31 +313,15 @@ public class RooftopControl {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            dimming = builder.dimming;
-            position = builder.position;
-            convertibleRoofState = builder.convertibleRoofState;
-            sunroofTiltState = builder.sunroofTiltState;
-            sunroofState = builder.sunroofState;
-            sunroofRainEvent = builder.sunroofRainEvent;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<Double> dimming;
-            private Property<Double> position;
-            private Property<ConvertibleRoofState> convertibleRoofState;
-            private Property<SunroofTiltState> sunroofTiltState;
-            private Property<SunroofState> sunroofState;
-            private Property<SunroofRainEvent> sunroofRainEvent;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -335,8 +329,8 @@ public class RooftopControl {
              * @return The builder
              */
             public Builder setDimming(Property<Double> dimming) {
-                this.dimming = dimming.setIdentifier(PROPERTY_DIMMING);
-                addProperty(this.dimming);
+                Property property = dimming.setIdentifier(PROPERTY_DIMMING);
+                addProperty(property);
                 return this;
             }
             
@@ -345,8 +339,8 @@ public class RooftopControl {
              * @return The builder
              */
             public Builder setPosition(Property<Double> position) {
-                this.position = position.setIdentifier(PROPERTY_POSITION);
-                addProperty(this.position);
+                Property property = position.setIdentifier(PROPERTY_POSITION);
+                addProperty(property);
                 return this;
             }
             
@@ -355,8 +349,8 @@ public class RooftopControl {
              * @return The builder
              */
             public Builder setConvertibleRoofState(Property<ConvertibleRoofState> convertibleRoofState) {
-                this.convertibleRoofState = convertibleRoofState.setIdentifier(PROPERTY_CONVERTIBLE_ROOF_STATE);
-                addProperty(this.convertibleRoofState);
+                Property property = convertibleRoofState.setIdentifier(PROPERTY_CONVERTIBLE_ROOF_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -365,8 +359,8 @@ public class RooftopControl {
              * @return The builder
              */
             public Builder setSunroofTiltState(Property<SunroofTiltState> sunroofTiltState) {
-                this.sunroofTiltState = sunroofTiltState.setIdentifier(PROPERTY_SUNROOF_TILT_STATE);
-                addProperty(this.sunroofTiltState);
+                Property property = sunroofTiltState.setIdentifier(PROPERTY_SUNROOF_TILT_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -375,8 +369,8 @@ public class RooftopControl {
              * @return The builder
              */
             public Builder setSunroofState(Property<SunroofState> sunroofState) {
-                this.sunroofState = sunroofState.setIdentifier(PROPERTY_SUNROOF_STATE);
-                addProperty(this.sunroofState);
+                Property property = sunroofState.setIdentifier(PROPERTY_SUNROOF_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -385,8 +379,18 @@ public class RooftopControl {
              * @return The builder
              */
             public Builder setSunroofRainEvent(Property<SunroofRainEvent> sunroofRainEvent) {
-                this.sunroofRainEvent = sunroofRainEvent.setIdentifier(PROPERTY_SUNROOF_RAIN_EVENT);
-                addProperty(this.sunroofRainEvent);
+                Property property = sunroofRainEvent.setIdentifier(PROPERTY_SUNROOF_RAIN_EVENT);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param tiltPosition 1.0 (100%) is fully tilted, 0.0 (0%) is not
+             * @return The builder
+             */
+            public Builder setTiltPosition(Property<Double> tiltPosition) {
+                Property property = tiltPosition.setIdentifier(PROPERTY_TILT_POSITION);
+                addProperty(property);
                 return this;
             }
         }
@@ -494,7 +498,8 @@ public class RooftopControl {
     public enum SunroofRainEvent implements ByteEnum {
         NO_EVENT((byte) 0x00),
         IN_STROKE_POSITION_BECAUSE_OF_RAIN((byte) 0x01),
-        AUTOMATICALLY_IN_STROKE_POSITION((byte) 0x02);
+        AUTOMATICALLY_IN_STROKE_POSITION((byte) 0x02),
+        TIMER((byte) 0x03);
     
         public static SunroofRainEvent fromByte(byte byteValue) throws CommandParseException {
             SunroofRainEvent[] values = SunroofRainEvent.values();

@@ -68,7 +68,6 @@ class KSeatsTest : BaseTest() {
     }
     
     private fun testState(state: Seats.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.personsDetected[0].value?.location == SeatLocation.FRONT_LEFT)
         assertTrue(state.personsDetected[0].value?.detected == Detected.DETECTED)
         assertTrue(state.personsDetected[1].value?.location == SeatLocation.FRONT_RIGHT)
@@ -89,6 +88,7 @@ class KSeatsTest : BaseTest() {
         assertTrue(state.seatbeltsState[3].value?.fastenedState == SeatbeltState.FastenedState.NOT_FASTENED)
         assertTrue(state.seatbeltsState[4].value?.location == SeatLocation.REAR_CENTER)
         assertTrue(state.seatbeltsState[4].value?.fastenedState == SeatbeltState.FastenedState.NOT_FASTENED)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

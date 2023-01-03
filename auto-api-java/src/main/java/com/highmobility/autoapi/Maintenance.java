@@ -26,7 +26,11 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
+import com.highmobility.autoapi.value.BrakeServiceDueDate;
+import com.highmobility.autoapi.value.BrakeServiceRemainingDistance;
+import com.highmobility.autoapi.value.BrakeServiceStatus;
 import com.highmobility.autoapi.value.ConditionBasedService;
+import com.highmobility.autoapi.value.ServiceStatus;
 import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.autoapi.value.measurement.Length;
 import com.highmobility.value.Bytes;
@@ -60,6 +64,23 @@ public class Maintenance {
     public static final byte PROPERTY_LAST_ECALL = 0x10;
     public static final byte PROPERTY_DISTANCE_TO_NEXT_OIL_SERVICE = 0x11;
     public static final byte PROPERTY_TIME_TO_NEXT_OIL_SERVICE = 0x12;
+    public static final byte PROPERTY_BRAKE_FLUID_REMAINING_DISTANCE = 0x13;
+    public static final byte PROPERTY_BRAKE_FLUID_STATUS = 0x14;
+    public static final byte PROPERTY_BRAKES_SERVICE_DUE_DATES = 0x16;
+    public static final byte PROPERTY_BRAKES_SERVICE_REMAINING_DISTANCES = 0x17;
+    public static final byte PROPERTY_BRAKES_SERVICE_STATUSES = 0x18;
+    public static final byte PROPERTY_DRIVE_IN_INSPECTION_DATE = 0x19;
+    public static final byte PROPERTY_DRIVE_IN_INSPECTION_STATUS = 0x1a;
+    public static final byte PROPERTY_NEXT_OIL_SERVICE_DATE = 0x1b;
+    public static final byte PROPERTY_NEXT_INSPECTION_DISTANCE_TO = 0x1c;
+    public static final byte PROPERTY_LEGAL_INSPECTION_DATE = 0x1d;
+    public static final byte PROPERTY_SERVICE_STATUS = 0x1e;
+    public static final byte PROPERTY_SERVICE_DATE = 0x1f;
+    public static final byte PROPERTY_INSPECTION_STATUS = 0x20;
+    public static final byte PROPERTY_DRIVE_IN_INSPECTION_DISTANCE_TO = 0x21;
+    public static final byte PROPERTY_VEHICLE_CHECK_DATE = 0x22;
+    public static final byte PROPERTY_VEHICLE_CHECK_STATUS = 0x23;
+    public static final byte PROPERTY_VEHICLE_CHECK_DISTANCE_TO = 0x24;
 
     /**
      * Get Maintenance property availability information
@@ -177,6 +198,23 @@ public class Maintenance {
         Property<Calendar> lastECall = new Property<>(Calendar.class, PROPERTY_LAST_ECALL);
         Property<Length> distanceToNextOilService = new Property<>(Length.class, PROPERTY_DISTANCE_TO_NEXT_OIL_SERVICE);
         Property<Duration> timeToNextOilService = new Property<>(Duration.class, PROPERTY_TIME_TO_NEXT_OIL_SERVICE);
+        Property<Length> brakeFluidRemainingDistance = new Property<>(Length.class, PROPERTY_BRAKE_FLUID_REMAINING_DISTANCE);
+        Property<ServiceStatus> brakeFluidStatus = new Property<>(ServiceStatus.class, PROPERTY_BRAKE_FLUID_STATUS);
+        List<Property<BrakeServiceDueDate>> brakesServiceDueDates;
+        List<Property<BrakeServiceRemainingDistance>> brakesServiceRemainingDistances;
+        List<Property<BrakeServiceStatus>> brakesServiceStatuses;
+        Property<Calendar> driveInInspectionDate = new Property<>(Calendar.class, PROPERTY_DRIVE_IN_INSPECTION_DATE);
+        Property<ServiceStatus> driveInInspectionStatus = new Property<>(ServiceStatus.class, PROPERTY_DRIVE_IN_INSPECTION_STATUS);
+        Property<Calendar> nextOilServiceDate = new Property<>(Calendar.class, PROPERTY_NEXT_OIL_SERVICE_DATE);
+        Property<Length> nextInspectionDistanceTo = new Property<>(Length.class, PROPERTY_NEXT_INSPECTION_DISTANCE_TO);
+        Property<Calendar> legalInspectionDate = new Property<>(Calendar.class, PROPERTY_LEGAL_INSPECTION_DATE);
+        Property<ServiceStatus> serviceStatus = new Property<>(ServiceStatus.class, PROPERTY_SERVICE_STATUS);
+        Property<Calendar> serviceDate = new Property<>(Calendar.class, PROPERTY_SERVICE_DATE);
+        Property<ServiceStatus> inspectionStatus = new Property<>(ServiceStatus.class, PROPERTY_INSPECTION_STATUS);
+        Property<Length> driveInInspectionDistanceTo = new Property<>(Length.class, PROPERTY_DRIVE_IN_INSPECTION_DISTANCE_TO);
+        Property<Calendar> vehicleCheckDate = new Property<>(Calendar.class, PROPERTY_VEHICLE_CHECK_DATE);
+        Property<ServiceStatus> vehicleCheckStatus = new Property<>(ServiceStatus.class, PROPERTY_VEHICLE_CHECK_STATUS);
+        Property<Length> vehicleCheckDistanceTo = new Property<>(Length.class, PROPERTY_VEHICLE_CHECK_DISTANCE_TO);
     
         /**
          * @return Time until next servicing of the car
@@ -310,13 +348,135 @@ public class Maintenance {
             return timeToNextOilService;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        /**
+         * @return Indicates the remaining distance for brake fluid.
+         */
+        public Property<Length> getBrakeFluidRemainingDistance() {
+            return brakeFluidRemainingDistance;
+        }
+    
+        /**
+         * @return Brake fluid's service status.
+         */
+        public Property<ServiceStatus> getBrakeFluidStatus() {
+            return brakeFluidStatus;
+        }
+    
+        /**
+         * @return Brakes servicing due dates.
+         */
+        public List<Property<BrakeServiceDueDate>> getBrakesServiceDueDates() {
+            return brakesServiceDueDates;
+        }
+    
+        /**
+         * @return Brakes servicing remaining distances.
+         */
+        public List<Property<BrakeServiceRemainingDistance>> getBrakesServiceRemainingDistances() {
+            return brakesServiceRemainingDistances;
+        }
+    
+        /**
+         * @return Brakes servicing statuses.
+         */
+        public List<Property<BrakeServiceStatus>> getBrakesServiceStatuses() {
+            return brakesServiceStatuses;
+        }
+    
+        /**
+         * @return Next drive-in inspection date.
+         */
+        public Property<Calendar> getDriveInInspectionDate() {
+            return driveInInspectionDate;
+        }
+    
+        /**
+         * @return Drive-in inspection service status.
+         */
+        public Property<ServiceStatus> getDriveInInspectionStatus() {
+            return driveInInspectionStatus;
+        }
+    
+        /**
+         * @return Next oil service date.
+         */
+        public Property<Calendar> getNextOilServiceDate() {
+            return nextOilServiceDate;
+        }
+    
+        /**
+         * @return Distance until the next inspection.
+         */
+        public Property<Length> getNextInspectionDistanceTo() {
+            return nextInspectionDistanceTo;
+        }
+    
+        /**
+         * @return Next legally required inspection date
+         */
+        public Property<Calendar> getLegalInspectionDate() {
+            return legalInspectionDate;
+        }
+    
+        /**
+         * @return Consolidated status regarding service requirements. OK: no current service requirement, WARNING: at least one service has reported requirement, CRITICAL: at least one service is overdue.
+         */
+        public Property<ServiceStatus> getServiceStatus() {
+            return serviceStatus;
+        }
+    
+        /**
+         * @return Date of the earliest service. If this service is overdue, the date is in the past.
+         */
+        public Property<Calendar> getServiceDate() {
+            return serviceDate;
+        }
+    
+        /**
+         * @return Vehicle inspection service status.
+         */
+        public Property<ServiceStatus> getInspectionStatus() {
+            return inspectionStatus;
+        }
+    
+        /**
+         * @return The distance until next drive-in inspection of the vehicle
+         */
+        public Property<Length> getDriveInInspectionDistanceTo() {
+            return driveInInspectionDistanceTo;
+        }
+    
+        /**
+         * @return Vehicle check date (usually after a predetermined distance).
+         */
+        public Property<Calendar> getVehicleCheckDate() {
+            return vehicleCheckDate;
+        }
+    
+        /**
+         * @return Vehicle check service status.
+         */
+        public Property<ServiceStatus> getVehicleCheckStatus() {
+            return vehicleCheckStatus;
+        }
+    
+        /**
+         * @return The distance until next vehicle check.
+         */
+        public Property<Length> getVehicleCheckDistanceTo() {
+            return vehicleCheckDistanceTo;
+        }
+    
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<ConditionBasedService>> conditionBasedServicesBuilder = new ArrayList<>();
+            final ArrayList<Property<BrakeServiceDueDate>> brakesServiceDueDatesBuilder = new ArrayList<>();
+            final ArrayList<Property<BrakeServiceRemainingDistance>> brakesServiceRemainingDistancesBuilder = new ArrayList<>();
+            final ArrayList<Property<BrakeServiceStatus>> brakesServiceStatusesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_DAYS_TO_NEXT_SERVICE: return daysToNextService.update(p);
                         case PROPERTY_KILOMETERS_TO_NEXT_SERVICE: return kilometersToNextService.update(p);
@@ -339,6 +499,32 @@ public class Maintenance {
                         case PROPERTY_LAST_ECALL: return lastECall.update(p);
                         case PROPERTY_DISTANCE_TO_NEXT_OIL_SERVICE: return distanceToNextOilService.update(p);
                         case PROPERTY_TIME_TO_NEXT_OIL_SERVICE: return timeToNextOilService.update(p);
+                        case PROPERTY_BRAKE_FLUID_REMAINING_DISTANCE: return brakeFluidRemainingDistance.update(p);
+                        case PROPERTY_BRAKE_FLUID_STATUS: return brakeFluidStatus.update(p);
+                        case PROPERTY_BRAKES_SERVICE_DUE_DATES:
+                            Property<BrakeServiceDueDate> brakeServiceDueDate = new Property<>(BrakeServiceDueDate.class, p);
+                            brakesServiceDueDatesBuilder.add(brakeServiceDueDate);
+                            return brakeServiceDueDate;
+                        case PROPERTY_BRAKES_SERVICE_REMAINING_DISTANCES:
+                            Property<BrakeServiceRemainingDistance> brakeServiceRemainingDistance = new Property<>(BrakeServiceRemainingDistance.class, p);
+                            brakesServiceRemainingDistancesBuilder.add(brakeServiceRemainingDistance);
+                            return brakeServiceRemainingDistance;
+                        case PROPERTY_BRAKES_SERVICE_STATUSES:
+                            Property<BrakeServiceStatus> brakeServiceStatus = new Property<>(BrakeServiceStatus.class, p);
+                            brakesServiceStatusesBuilder.add(brakeServiceStatus);
+                            return brakeServiceStatus;
+                        case PROPERTY_DRIVE_IN_INSPECTION_DATE: return driveInInspectionDate.update(p);
+                        case PROPERTY_DRIVE_IN_INSPECTION_STATUS: return driveInInspectionStatus.update(p);
+                        case PROPERTY_NEXT_OIL_SERVICE_DATE: return nextOilServiceDate.update(p);
+                        case PROPERTY_NEXT_INSPECTION_DISTANCE_TO: return nextInspectionDistanceTo.update(p);
+                        case PROPERTY_LEGAL_INSPECTION_DATE: return legalInspectionDate.update(p);
+                        case PROPERTY_SERVICE_STATUS: return serviceStatus.update(p);
+                        case PROPERTY_SERVICE_DATE: return serviceDate.update(p);
+                        case PROPERTY_INSPECTION_STATUS: return inspectionStatus.update(p);
+                        case PROPERTY_DRIVE_IN_INSPECTION_DISTANCE_TO: return driveInInspectionDistanceTo.update(p);
+                        case PROPERTY_VEHICLE_CHECK_DATE: return vehicleCheckDate.update(p);
+                        case PROPERTY_VEHICLE_CHECK_STATUS: return vehicleCheckStatus.update(p);
+                        case PROPERTY_VEHICLE_CHECK_DISTANCE_TO: return vehicleCheckDistanceTo.update(p);
                     }
     
                     return null;
@@ -346,57 +532,20 @@ public class Maintenance {
             }
     
             conditionBasedServices = conditionBasedServicesBuilder;
+            brakesServiceDueDates = brakesServiceDueDatesBuilder;
+            brakesServiceRemainingDistances = brakesServiceRemainingDistancesBuilder;
+            brakesServiceStatuses = brakesServiceStatusesBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            daysToNextService = builder.daysToNextService;
-            kilometersToNextService = builder.kilometersToNextService;
-            cbsReportsCount = builder.cbsReportsCount;
-            monthsToExhaustInspection = builder.monthsToExhaustInspection;
-            teleserviceAvailability = builder.teleserviceAvailability;
-            serviceDistanceThreshold = builder.serviceDistanceThreshold;
-            serviceTimeThreshold = builder.serviceTimeThreshold;
-            automaticTeleserviceCallDate = builder.automaticTeleserviceCallDate;
-            teleserviceBatteryCallDate = builder.teleserviceBatteryCallDate;
-            nextInspectionDate = builder.nextInspectionDate;
-            conditionBasedServices = builder.conditionBasedServices;
-            brakeFluidChangeDate = builder.brakeFluidChangeDate;
-            timeToNextService = builder.timeToNextService;
-            distanceToNextService = builder.distanceToNextService;
-            timeToExhaustInspection = builder.timeToExhaustInspection;
-            lastECall = builder.lastECall;
-            distanceToNextOilService = builder.distanceToNextOilService;
-            timeToNextOilService = builder.timeToNextOilService;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<Duration> daysToNextService;
-            private Property<Length> kilometersToNextService;
-            private PropertyInteger cbsReportsCount;
-            private Property<Duration> monthsToExhaustInspection;
-            private Property<TeleserviceAvailability> teleserviceAvailability;
-            private Property<Length> serviceDistanceThreshold;
-            private Property<Duration> serviceTimeThreshold;
-            private Property<Calendar> automaticTeleserviceCallDate;
-            private Property<Calendar> teleserviceBatteryCallDate;
-            private Property<Calendar> nextInspectionDate;
-            private final List<Property<ConditionBasedService>> conditionBasedServices = new ArrayList<>();
-            private Property<Calendar> brakeFluidChangeDate;
-            private Property<Duration> timeToNextService;
-            private Property<Length> distanceToNextService;
-            private Property<Duration> timeToExhaustInspection;
-            private Property<Calendar> lastECall;
-            private Property<Length> distanceToNextOilService;
-            private Property<Duration> timeToNextOilService;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -406,8 +555,8 @@ public class Maintenance {
              */
             @Deprecated
             public Builder setDaysToNextService(Property<Duration> daysToNextService) {
-                this.daysToNextService = daysToNextService.setIdentifier(PROPERTY_DAYS_TO_NEXT_SERVICE);
-                addProperty(this.daysToNextService);
+                Property property = daysToNextService.setIdentifier(PROPERTY_DAYS_TO_NEXT_SERVICE);
+                addProperty(property);
                 return this;
             }
             
@@ -418,8 +567,8 @@ public class Maintenance {
              */
             @Deprecated
             public Builder setKilometersToNextService(Property<Length> kilometersToNextService) {
-                this.kilometersToNextService = kilometersToNextService.setIdentifier(PROPERTY_KILOMETERS_TO_NEXT_SERVICE);
-                addProperty(this.kilometersToNextService);
+                Property property = kilometersToNextService.setIdentifier(PROPERTY_KILOMETERS_TO_NEXT_SERVICE);
+                addProperty(property);
                 return this;
             }
             
@@ -428,8 +577,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setCbsReportsCount(Property<Integer> cbsReportsCount) {
-                this.cbsReportsCount = new PropertyInteger(PROPERTY_CBS_REPORTS_COUNT, false, 1, cbsReportsCount);
-                addProperty(this.cbsReportsCount);
+                Property property = new PropertyInteger(PROPERTY_CBS_REPORTS_COUNT, false, 1, cbsReportsCount);
+                addProperty(property);
                 return this;
             }
             
@@ -440,8 +589,8 @@ public class Maintenance {
              */
             @Deprecated
             public Builder setMonthsToExhaustInspection(Property<Duration> monthsToExhaustInspection) {
-                this.monthsToExhaustInspection = monthsToExhaustInspection.setIdentifier(PROPERTY_MONTHS_TO_EXHAUST_INSPECTION);
-                addProperty(this.monthsToExhaustInspection);
+                Property property = monthsToExhaustInspection.setIdentifier(PROPERTY_MONTHS_TO_EXHAUST_INSPECTION);
+                addProperty(property);
                 return this;
             }
             
@@ -450,8 +599,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setTeleserviceAvailability(Property<TeleserviceAvailability> teleserviceAvailability) {
-                this.teleserviceAvailability = teleserviceAvailability.setIdentifier(PROPERTY_TELESERVICE_AVAILABILITY);
-                addProperty(this.teleserviceAvailability);
+                Property property = teleserviceAvailability.setIdentifier(PROPERTY_TELESERVICE_AVAILABILITY);
+                addProperty(property);
                 return this;
             }
             
@@ -460,8 +609,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setServiceDistanceThreshold(Property<Length> serviceDistanceThreshold) {
-                this.serviceDistanceThreshold = serviceDistanceThreshold.setIdentifier(PROPERTY_SERVICE_DISTANCE_THRESHOLD);
-                addProperty(this.serviceDistanceThreshold);
+                Property property = serviceDistanceThreshold.setIdentifier(PROPERTY_SERVICE_DISTANCE_THRESHOLD);
+                addProperty(property);
                 return this;
             }
             
@@ -470,8 +619,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setServiceTimeThreshold(Property<Duration> serviceTimeThreshold) {
-                this.serviceTimeThreshold = serviceTimeThreshold.setIdentifier(PROPERTY_SERVICE_TIME_THRESHOLD);
-                addProperty(this.serviceTimeThreshold);
+                Property property = serviceTimeThreshold.setIdentifier(PROPERTY_SERVICE_TIME_THRESHOLD);
+                addProperty(property);
                 return this;
             }
             
@@ -480,8 +629,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setAutomaticTeleserviceCallDate(Property<Calendar> automaticTeleserviceCallDate) {
-                this.automaticTeleserviceCallDate = automaticTeleserviceCallDate.setIdentifier(PROPERTY_AUTOMATIC_TELESERVICE_CALL_DATE);
-                addProperty(this.automaticTeleserviceCallDate);
+                Property property = automaticTeleserviceCallDate.setIdentifier(PROPERTY_AUTOMATIC_TELESERVICE_CALL_DATE);
+                addProperty(property);
                 return this;
             }
             
@@ -490,8 +639,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setTeleserviceBatteryCallDate(Property<Calendar> teleserviceBatteryCallDate) {
-                this.teleserviceBatteryCallDate = teleserviceBatteryCallDate.setIdentifier(PROPERTY_TELESERVICE_BATTERY_CALL_DATE);
-                addProperty(this.teleserviceBatteryCallDate);
+                Property property = teleserviceBatteryCallDate.setIdentifier(PROPERTY_TELESERVICE_BATTERY_CALL_DATE);
+                addProperty(property);
                 return this;
             }
             
@@ -500,8 +649,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setNextInspectionDate(Property<Calendar> nextInspectionDate) {
-                this.nextInspectionDate = nextInspectionDate.setIdentifier(PROPERTY_NEXT_INSPECTION_DATE);
-                addProperty(this.nextInspectionDate);
+                Property property = nextInspectionDate.setIdentifier(PROPERTY_NEXT_INSPECTION_DATE);
+                addProperty(property);
                 return this;
             }
             
@@ -512,7 +661,6 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setConditionBasedServices(Property<ConditionBasedService>[] conditionBasedServices) {
-                this.conditionBasedServices.clear();
                 for (int i = 0; i < conditionBasedServices.length; i++) {
                     addConditionBasedService(conditionBasedServices[i]);
                 }
@@ -529,7 +677,6 @@ public class Maintenance {
             public Builder addConditionBasedService(Property<ConditionBasedService> conditionBasedService) {
                 conditionBasedService.setIdentifier(PROPERTY_CONDITION_BASED_SERVICES);
                 addProperty(conditionBasedService);
-                conditionBasedServices.add(conditionBasedService);
                 return this;
             }
             
@@ -538,8 +685,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setBrakeFluidChangeDate(Property<Calendar> brakeFluidChangeDate) {
-                this.brakeFluidChangeDate = brakeFluidChangeDate.setIdentifier(PROPERTY_BRAKE_FLUID_CHANGE_DATE);
-                addProperty(this.brakeFluidChangeDate);
+                Property property = brakeFluidChangeDate.setIdentifier(PROPERTY_BRAKE_FLUID_CHANGE_DATE);
+                addProperty(property);
                 return this;
             }
             
@@ -548,8 +695,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setTimeToNextService(Property<Duration> timeToNextService) {
-                this.timeToNextService = timeToNextService.setIdentifier(PROPERTY_TIME_TO_NEXT_SERVICE);
-                addProperty(this.timeToNextService);
+                Property property = timeToNextService.setIdentifier(PROPERTY_TIME_TO_NEXT_SERVICE);
+                addProperty(property);
                 return this;
             }
             
@@ -558,8 +705,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setDistanceToNextService(Property<Length> distanceToNextService) {
-                this.distanceToNextService = distanceToNextService.setIdentifier(PROPERTY_DISTANCE_TO_NEXT_SERVICE);
-                addProperty(this.distanceToNextService);
+                Property property = distanceToNextService.setIdentifier(PROPERTY_DISTANCE_TO_NEXT_SERVICE);
+                addProperty(property);
                 return this;
             }
             
@@ -568,8 +715,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setTimeToExhaustInspection(Property<Duration> timeToExhaustInspection) {
-                this.timeToExhaustInspection = timeToExhaustInspection.setIdentifier(PROPERTY_TIME_TO_EXHAUST_INSPECTION);
-                addProperty(this.timeToExhaustInspection);
+                Property property = timeToExhaustInspection.setIdentifier(PROPERTY_TIME_TO_EXHAUST_INSPECTION);
+                addProperty(property);
                 return this;
             }
             
@@ -578,8 +725,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setLastECall(Property<Calendar> lastECall) {
-                this.lastECall = lastECall.setIdentifier(PROPERTY_LAST_ECALL);
-                addProperty(this.lastECall);
+                Property property = lastECall.setIdentifier(PROPERTY_LAST_ECALL);
+                addProperty(property);
                 return this;
             }
             
@@ -588,8 +735,8 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setDistanceToNextOilService(Property<Length> distanceToNextOilService) {
-                this.distanceToNextOilService = distanceToNextOilService.setIdentifier(PROPERTY_DISTANCE_TO_NEXT_OIL_SERVICE);
-                addProperty(this.distanceToNextOilService);
+                Property property = distanceToNextOilService.setIdentifier(PROPERTY_DISTANCE_TO_NEXT_OIL_SERVICE);
+                addProperty(property);
                 return this;
             }
             
@@ -598,8 +745,226 @@ public class Maintenance {
              * @return The builder
              */
             public Builder setTimeToNextOilService(Property<Duration> timeToNextOilService) {
-                this.timeToNextOilService = timeToNextOilService.setIdentifier(PROPERTY_TIME_TO_NEXT_OIL_SERVICE);
-                addProperty(this.timeToNextOilService);
+                Property property = timeToNextOilService.setIdentifier(PROPERTY_TIME_TO_NEXT_OIL_SERVICE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param brakeFluidRemainingDistance Indicates the remaining distance for brake fluid.
+             * @return The builder
+             */
+            public Builder setBrakeFluidRemainingDistance(Property<Length> brakeFluidRemainingDistance) {
+                Property property = brakeFluidRemainingDistance.setIdentifier(PROPERTY_BRAKE_FLUID_REMAINING_DISTANCE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param brakeFluidStatus Brake fluid's service status.
+             * @return The builder
+             */
+            public Builder setBrakeFluidStatus(Property<ServiceStatus> brakeFluidStatus) {
+                Property property = brakeFluidStatus.setIdentifier(PROPERTY_BRAKE_FLUID_STATUS);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * Add an array of brakes service due dates
+             * 
+             * @param brakesServiceDueDates The brakes service due dates. Brakes servicing due dates.
+             * @return The builder
+             */
+            public Builder setBrakesServiceDueDates(Property<BrakeServiceDueDate>[] brakesServiceDueDates) {
+                for (int i = 0; i < brakesServiceDueDates.length; i++) {
+                    addBrakeServiceDueDate(brakesServiceDueDates[i]);
+                }
+            
+                return this;
+            }
+            
+            /**
+             * Add a single brake service due date
+             * 
+             * @param brakeServiceDueDate The brake service due date. Brakes servicing due dates.
+             * @return The builder
+             */
+            public Builder addBrakeServiceDueDate(Property<BrakeServiceDueDate> brakeServiceDueDate) {
+                brakeServiceDueDate.setIdentifier(PROPERTY_BRAKES_SERVICE_DUE_DATES);
+                addProperty(brakeServiceDueDate);
+                return this;
+            }
+            
+            /**
+             * Add an array of brakes service remaining distances
+             * 
+             * @param brakesServiceRemainingDistances The brakes service remaining distances. Brakes servicing remaining distances.
+             * @return The builder
+             */
+            public Builder setBrakesServiceRemainingDistances(Property<BrakeServiceRemainingDistance>[] brakesServiceRemainingDistances) {
+                for (int i = 0; i < brakesServiceRemainingDistances.length; i++) {
+                    addBrakeServiceRemainingDistance(brakesServiceRemainingDistances[i]);
+                }
+            
+                return this;
+            }
+            
+            /**
+             * Add a single brake service remaining distance
+             * 
+             * @param brakeServiceRemainingDistance The brake service remaining distance. Brakes servicing remaining distances.
+             * @return The builder
+             */
+            public Builder addBrakeServiceRemainingDistance(Property<BrakeServiceRemainingDistance> brakeServiceRemainingDistance) {
+                brakeServiceRemainingDistance.setIdentifier(PROPERTY_BRAKES_SERVICE_REMAINING_DISTANCES);
+                addProperty(brakeServiceRemainingDistance);
+                return this;
+            }
+            
+            /**
+             * Add an array of brakes service statuses
+             * 
+             * @param brakesServiceStatuses The brakes service statuses. Brakes servicing statuses.
+             * @return The builder
+             */
+            public Builder setBrakesServiceStatuses(Property<BrakeServiceStatus>[] brakesServiceStatuses) {
+                for (int i = 0; i < brakesServiceStatuses.length; i++) {
+                    addBrakeServiceStatus(brakesServiceStatuses[i]);
+                }
+            
+                return this;
+            }
+            
+            /**
+             * Add a single brake service status
+             * 
+             * @param brakeServiceStatus The brake service status. Brakes servicing statuses.
+             * @return The builder
+             */
+            public Builder addBrakeServiceStatus(Property<BrakeServiceStatus> brakeServiceStatus) {
+                brakeServiceStatus.setIdentifier(PROPERTY_BRAKES_SERVICE_STATUSES);
+                addProperty(brakeServiceStatus);
+                return this;
+            }
+            
+            /**
+             * @param driveInInspectionDate Next drive-in inspection date.
+             * @return The builder
+             */
+            public Builder setDriveInInspectionDate(Property<Calendar> driveInInspectionDate) {
+                Property property = driveInInspectionDate.setIdentifier(PROPERTY_DRIVE_IN_INSPECTION_DATE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param driveInInspectionStatus Drive-in inspection service status.
+             * @return The builder
+             */
+            public Builder setDriveInInspectionStatus(Property<ServiceStatus> driveInInspectionStatus) {
+                Property property = driveInInspectionStatus.setIdentifier(PROPERTY_DRIVE_IN_INSPECTION_STATUS);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param nextOilServiceDate Next oil service date.
+             * @return The builder
+             */
+            public Builder setNextOilServiceDate(Property<Calendar> nextOilServiceDate) {
+                Property property = nextOilServiceDate.setIdentifier(PROPERTY_NEXT_OIL_SERVICE_DATE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param nextInspectionDistanceTo Distance until the next inspection.
+             * @return The builder
+             */
+            public Builder setNextInspectionDistanceTo(Property<Length> nextInspectionDistanceTo) {
+                Property property = nextInspectionDistanceTo.setIdentifier(PROPERTY_NEXT_INSPECTION_DISTANCE_TO);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param legalInspectionDate Next legally required inspection date
+             * @return The builder
+             */
+            public Builder setLegalInspectionDate(Property<Calendar> legalInspectionDate) {
+                Property property = legalInspectionDate.setIdentifier(PROPERTY_LEGAL_INSPECTION_DATE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param serviceStatus Consolidated status regarding service requirements. OK: no current service requirement, WARNING: at least one service has reported requirement, CRITICAL: at least one service is overdue.
+             * @return The builder
+             */
+            public Builder setServiceStatus(Property<ServiceStatus> serviceStatus) {
+                Property property = serviceStatus.setIdentifier(PROPERTY_SERVICE_STATUS);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param serviceDate Date of the earliest service. If this service is overdue, the date is in the past.
+             * @return The builder
+             */
+            public Builder setServiceDate(Property<Calendar> serviceDate) {
+                Property property = serviceDate.setIdentifier(PROPERTY_SERVICE_DATE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param inspectionStatus Vehicle inspection service status.
+             * @return The builder
+             */
+            public Builder setInspectionStatus(Property<ServiceStatus> inspectionStatus) {
+                Property property = inspectionStatus.setIdentifier(PROPERTY_INSPECTION_STATUS);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param driveInInspectionDistanceTo The distance until next drive-in inspection of the vehicle
+             * @return The builder
+             */
+            public Builder setDriveInInspectionDistanceTo(Property<Length> driveInInspectionDistanceTo) {
+                Property property = driveInInspectionDistanceTo.setIdentifier(PROPERTY_DRIVE_IN_INSPECTION_DISTANCE_TO);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param vehicleCheckDate Vehicle check date (usually after a predetermined distance).
+             * @return The builder
+             */
+            public Builder setVehicleCheckDate(Property<Calendar> vehicleCheckDate) {
+                Property property = vehicleCheckDate.setIdentifier(PROPERTY_VEHICLE_CHECK_DATE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param vehicleCheckStatus Vehicle check service status.
+             * @return The builder
+             */
+            public Builder setVehicleCheckStatus(Property<ServiceStatus> vehicleCheckStatus) {
+                Property property = vehicleCheckStatus.setIdentifier(PROPERTY_VEHICLE_CHECK_STATUS);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param vehicleCheckDistanceTo The distance until next vehicle check.
+             * @return The builder
+             */
+            public Builder setVehicleCheckDistanceTo(Property<Length> vehicleCheckDistanceTo) {
+                Property property = vehicleCheckDistanceTo.setIdentifier(PROPERTY_VEHICLE_CHECK_DISTANCE_TO);
+                addProperty(property);
                 return this;
             }
         }

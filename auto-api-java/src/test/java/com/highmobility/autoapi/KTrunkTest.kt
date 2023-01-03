@@ -54,10 +54,10 @@ class KTrunkTest : BaseTest() {
     }
     
     private fun testState(state: Trunk.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.lock.value == LockState.UNLOCKED)
         assertTrue(state.position.value == Position.OPEN)
         assertTrue(state.lockSafety.value == LockSafety.SAFE)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

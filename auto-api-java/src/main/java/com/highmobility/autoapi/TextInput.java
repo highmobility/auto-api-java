@@ -58,10 +58,10 @@ public class TextInput {
             createBytes();
         }
     
-        TextInputCommand(byte[] bytes) throws CommandParseException, PropertyParseException {
+        TextInputCommand(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_TEXT) return text.update(p);
                     
                     return null;

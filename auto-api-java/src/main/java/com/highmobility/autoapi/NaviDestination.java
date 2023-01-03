@@ -173,10 +173,10 @@ public class NaviDestination {
             createBytes();
         }
     
-        SetNaviDestination(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetNaviDestination(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_COORDINATES: return coordinates.update(p);
                         case PROPERTY_DESTINATION_NAME: return destinationName.update(p);
@@ -244,10 +244,10 @@ public class NaviDestination {
             return distanceToDestination;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_COORDINATES: return coordinates.update(p);
                         case PROPERTY_DESTINATION_NAME: return destinationName.update(p);
@@ -262,31 +262,15 @@ public class NaviDestination {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            coordinates = builder.coordinates;
-            destinationName = builder.destinationName;
-            dataSlotsFree = builder.dataSlotsFree;
-            dataSlotsMax = builder.dataSlotsMax;
-            arrivalDuration = builder.arrivalDuration;
-            distanceToDestination = builder.distanceToDestination;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<Coordinates> coordinates;
-            private Property<String> destinationName;
-            private PropertyInteger dataSlotsFree;
-            private PropertyInteger dataSlotsMax;
-            private Property<Duration> arrivalDuration;
-            private Property<Length> distanceToDestination;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -294,8 +278,8 @@ public class NaviDestination {
              * @return The builder
              */
             public Builder setCoordinates(Property<Coordinates> coordinates) {
-                this.coordinates = coordinates.setIdentifier(PROPERTY_COORDINATES);
-                addProperty(this.coordinates);
+                Property property = coordinates.setIdentifier(PROPERTY_COORDINATES);
+                addProperty(property);
                 return this;
             }
             
@@ -304,8 +288,8 @@ public class NaviDestination {
              * @return The builder
              */
             public Builder setDestinationName(Property<String> destinationName) {
-                this.destinationName = destinationName.setIdentifier(PROPERTY_DESTINATION_NAME);
-                addProperty(this.destinationName);
+                Property property = destinationName.setIdentifier(PROPERTY_DESTINATION_NAME);
+                addProperty(property);
                 return this;
             }
             
@@ -314,8 +298,8 @@ public class NaviDestination {
              * @return The builder
              */
             public Builder setDataSlotsFree(Property<Integer> dataSlotsFree) {
-                this.dataSlotsFree = new PropertyInteger(PROPERTY_DATA_SLOTS_FREE, false, 1, dataSlotsFree);
-                addProperty(this.dataSlotsFree);
+                Property property = new PropertyInteger(PROPERTY_DATA_SLOTS_FREE, false, 1, dataSlotsFree);
+                addProperty(property);
                 return this;
             }
             
@@ -324,8 +308,8 @@ public class NaviDestination {
              * @return The builder
              */
             public Builder setDataSlotsMax(Property<Integer> dataSlotsMax) {
-                this.dataSlotsMax = new PropertyInteger(PROPERTY_DATA_SLOTS_MAX, false, 1, dataSlotsMax);
-                addProperty(this.dataSlotsMax);
+                Property property = new PropertyInteger(PROPERTY_DATA_SLOTS_MAX, false, 1, dataSlotsMax);
+                addProperty(property);
                 return this;
             }
             
@@ -334,8 +318,8 @@ public class NaviDestination {
              * @return The builder
              */
             public Builder setArrivalDuration(Property<Duration> arrivalDuration) {
-                this.arrivalDuration = arrivalDuration.setIdentifier(PROPERTY_ARRIVAL_DURATION);
-                addProperty(this.arrivalDuration);
+                Property property = arrivalDuration.setIdentifier(PROPERTY_ARRIVAL_DURATION);
+                addProperty(property);
                 return this;
             }
             
@@ -344,8 +328,8 @@ public class NaviDestination {
              * @return The builder
              */
             public Builder setDistanceToDestination(Property<Length> distanceToDestination) {
-                this.distanceToDestination = distanceToDestination.setIdentifier(PROPERTY_DISTANCE_TO_DESTINATION);
-                addProperty(this.distanceToDestination);
+                Property property = distanceToDestination.setIdentifier(PROPERTY_DISTANCE_TO_DESTINATION);
+                addProperty(property);
                 return this;
             }
         }

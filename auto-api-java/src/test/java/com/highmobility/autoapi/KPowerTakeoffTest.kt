@@ -52,9 +52,9 @@ class KPowerTakeoffTest : BaseTest() {
     }
     
     private fun testState(state: PowerTakeoff.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.status.value == ActiveState.ACTIVE)
         assertTrue(state.engaged.value == PowerTakeoff.Engaged.ENGAGED)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

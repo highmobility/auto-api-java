@@ -65,6 +65,7 @@ public class Trips {
     public static final byte PROPERTY_TOTAL_FUEL_CONSUMPTION = 0x13;
     public static final byte PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION = 0x14;
     public static final byte PROPERTY_MAXIMUM_SPEED = 0x15;
+    public static final byte PROPERTY_ROAD_TYPE = 0x16;
 
     /**
      * The trips state
@@ -91,6 +92,7 @@ public class Trips {
         Property<Volume> totalFuelConsumption = new Property<>(Volume.class, PROPERTY_TOTAL_FUEL_CONSUMPTION);
         Property<Volume> totalIdleFuelConsumption = new Property<>(Volume.class, PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION);
         Property<Speed> maximumSpeed = new Property<>(Speed.class, PROPERTY_MAXIMUM_SPEED);
+        Property<RoadType> roadType = new Property<>(RoadType.class, PROPERTY_ROAD_TYPE);
     
         /**
          * @return Type of the trip
@@ -239,7 +241,14 @@ public class Trips {
             return maximumSpeed;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        /**
+         * @return Type of road travelled on.
+         */
+        public Property<RoadType> getRoadType() {
+            return roadType;
+        }
+    
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<AddressComponent>> startAddressComponentsBuilder = new ArrayList<>();
@@ -247,7 +256,7 @@ public class Trips {
             final ArrayList<Property<EcoDrivingThreshold>> thresholdsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_TYPE: return type.update(p);
                         case PROPERTY_DRIVER_NAME: return driverName.update(p);
@@ -279,6 +288,7 @@ public class Trips {
                         case PROPERTY_TOTAL_FUEL_CONSUMPTION: return totalFuelConsumption.update(p);
                         case PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION: return totalIdleFuelConsumption.update(p);
                         case PROPERTY_MAXIMUM_SPEED: return maximumSpeed.update(p);
+                        case PROPERTY_ROAD_TYPE: return roadType.update(p);
                     }
     
                     return null;
@@ -290,61 +300,15 @@ public class Trips {
             thresholds = thresholdsBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            type = builder.type;
-            driverName = builder.driverName;
-            description = builder.description;
-            startTime = builder.startTime;
-            endTime = builder.endTime;
-            startAddress = builder.startAddress;
-            endAddress = builder.endAddress;
-            startCoordinates = builder.startCoordinates;
-            endCoordinates = builder.endCoordinates;
-            startOdometer = builder.startOdometer;
-            endOdometer = builder.endOdometer;
-            averageFuelConsumption = builder.averageFuelConsumption;
-            distance = builder.distance;
-            startAddressComponents = builder.startAddressComponents;
-            endAddressComponents = builder.endAddressComponents;
-            event = builder.event;
-            ecoLevel = builder.ecoLevel;
-            thresholds = builder.thresholds;
-            totalFuelConsumption = builder.totalFuelConsumption;
-            totalIdleFuelConsumption = builder.totalIdleFuelConsumption;
-            maximumSpeed = builder.maximumSpeed;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<Type> type;
-            private Property<String> driverName;
-            private Property<String> description;
-            private Property<Calendar> startTime;
-            private Property<Calendar> endTime;
-            private Property<String> startAddress;
-            private Property<String> endAddress;
-            private Property<Coordinates> startCoordinates;
-            private Property<Coordinates> endCoordinates;
-            private Property<Length> startOdometer;
-            private Property<Length> endOdometer;
-            private Property<FuelEfficiency> averageFuelConsumption;
-            private Property<Length> distance;
-            private final List<Property<AddressComponent>> startAddressComponents = new ArrayList<>();
-            private final List<Property<AddressComponent>> endAddressComponents = new ArrayList<>();
-            private Property<Event> event;
-            private Property<EcoLevel> ecoLevel;
-            private final List<Property<EcoDrivingThreshold>> thresholds = new ArrayList<>();
-            private Property<Volume> totalFuelConsumption;
-            private Property<Volume> totalIdleFuelConsumption;
-            private Property<Speed> maximumSpeed;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -352,8 +316,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setType(Property<Type> type) {
-                this.type = type.setIdentifier(PROPERTY_TYPE);
-                addProperty(this.type);
+                Property property = type.setIdentifier(PROPERTY_TYPE);
+                addProperty(property);
                 return this;
             }
             
@@ -362,8 +326,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setDriverName(Property<String> driverName) {
-                this.driverName = driverName.setIdentifier(PROPERTY_DRIVER_NAME);
-                addProperty(this.driverName);
+                Property property = driverName.setIdentifier(PROPERTY_DRIVER_NAME);
+                addProperty(property);
                 return this;
             }
             
@@ -372,8 +336,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setDescription(Property<String> description) {
-                this.description = description.setIdentifier(PROPERTY_DESCRIPTION);
-                addProperty(this.description);
+                Property property = description.setIdentifier(PROPERTY_DESCRIPTION);
+                addProperty(property);
                 return this;
             }
             
@@ -382,8 +346,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setStartTime(Property<Calendar> startTime) {
-                this.startTime = startTime.setIdentifier(PROPERTY_START_TIME);
-                addProperty(this.startTime);
+                Property property = startTime.setIdentifier(PROPERTY_START_TIME);
+                addProperty(property);
                 return this;
             }
             
@@ -392,8 +356,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setEndTime(Property<Calendar> endTime) {
-                this.endTime = endTime.setIdentifier(PROPERTY_END_TIME);
-                addProperty(this.endTime);
+                Property property = endTime.setIdentifier(PROPERTY_END_TIME);
+                addProperty(property);
                 return this;
             }
             
@@ -402,8 +366,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setStartAddress(Property<String> startAddress) {
-                this.startAddress = startAddress.setIdentifier(PROPERTY_START_ADDRESS);
-                addProperty(this.startAddress);
+                Property property = startAddress.setIdentifier(PROPERTY_START_ADDRESS);
+                addProperty(property);
                 return this;
             }
             
@@ -412,8 +376,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setEndAddress(Property<String> endAddress) {
-                this.endAddress = endAddress.setIdentifier(PROPERTY_END_ADDRESS);
-                addProperty(this.endAddress);
+                Property property = endAddress.setIdentifier(PROPERTY_END_ADDRESS);
+                addProperty(property);
                 return this;
             }
             
@@ -422,8 +386,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setStartCoordinates(Property<Coordinates> startCoordinates) {
-                this.startCoordinates = startCoordinates.setIdentifier(PROPERTY_START_COORDINATES);
-                addProperty(this.startCoordinates);
+                Property property = startCoordinates.setIdentifier(PROPERTY_START_COORDINATES);
+                addProperty(property);
                 return this;
             }
             
@@ -432,8 +396,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setEndCoordinates(Property<Coordinates> endCoordinates) {
-                this.endCoordinates = endCoordinates.setIdentifier(PROPERTY_END_COORDINATES);
-                addProperty(this.endCoordinates);
+                Property property = endCoordinates.setIdentifier(PROPERTY_END_COORDINATES);
+                addProperty(property);
                 return this;
             }
             
@@ -442,8 +406,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setStartOdometer(Property<Length> startOdometer) {
-                this.startOdometer = startOdometer.setIdentifier(PROPERTY_START_ODOMETER);
-                addProperty(this.startOdometer);
+                Property property = startOdometer.setIdentifier(PROPERTY_START_ODOMETER);
+                addProperty(property);
                 return this;
             }
             
@@ -452,8 +416,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setEndOdometer(Property<Length> endOdometer) {
-                this.endOdometer = endOdometer.setIdentifier(PROPERTY_END_ODOMETER);
-                addProperty(this.endOdometer);
+                Property property = endOdometer.setIdentifier(PROPERTY_END_ODOMETER);
+                addProperty(property);
                 return this;
             }
             
@@ -462,8 +426,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setAverageFuelConsumption(Property<FuelEfficiency> averageFuelConsumption) {
-                this.averageFuelConsumption = averageFuelConsumption.setIdentifier(PROPERTY_AVERAGE_FUEL_CONSUMPTION);
-                addProperty(this.averageFuelConsumption);
+                Property property = averageFuelConsumption.setIdentifier(PROPERTY_AVERAGE_FUEL_CONSUMPTION);
+                addProperty(property);
                 return this;
             }
             
@@ -472,8 +436,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setDistance(Property<Length> distance) {
-                this.distance = distance.setIdentifier(PROPERTY_DISTANCE);
-                addProperty(this.distance);
+                Property property = distance.setIdentifier(PROPERTY_DISTANCE);
+                addProperty(property);
                 return this;
             }
             
@@ -484,7 +448,6 @@ public class Trips {
              * @return The builder
              */
             public Builder setStartAddressComponents(Property<AddressComponent>[] startAddressComponents) {
-                this.startAddressComponents.clear();
                 for (int i = 0; i < startAddressComponents.length; i++) {
                     addStartAddressComponent(startAddressComponents[i]);
                 }
@@ -501,7 +464,6 @@ public class Trips {
             public Builder addStartAddressComponent(Property<AddressComponent> startAddressComponent) {
                 startAddressComponent.setIdentifier(PROPERTY_START_ADDRESS_COMPONENTS);
                 addProperty(startAddressComponent);
-                startAddressComponents.add(startAddressComponent);
                 return this;
             }
             
@@ -512,7 +474,6 @@ public class Trips {
              * @return The builder
              */
             public Builder setEndAddressComponents(Property<AddressComponent>[] endAddressComponents) {
-                this.endAddressComponents.clear();
                 for (int i = 0; i < endAddressComponents.length; i++) {
                     addEndAddressComponent(endAddressComponents[i]);
                 }
@@ -529,7 +490,6 @@ public class Trips {
             public Builder addEndAddressComponent(Property<AddressComponent> endAddressComponent) {
                 endAddressComponent.setIdentifier(PROPERTY_END_ADDRESS_COMPONENTS);
                 addProperty(endAddressComponent);
-                endAddressComponents.add(endAddressComponent);
                 return this;
             }
             
@@ -538,8 +498,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setEvent(Property<Event> event) {
-                this.event = event.setIdentifier(PROPERTY_EVENT);
-                addProperty(this.event);
+                Property property = event.setIdentifier(PROPERTY_EVENT);
+                addProperty(property);
                 return this;
             }
             
@@ -548,8 +508,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setEcoLevel(Property<EcoLevel> ecoLevel) {
-                this.ecoLevel = ecoLevel.setIdentifier(PROPERTY_ECO_LEVEL);
-                addProperty(this.ecoLevel);
+                Property property = ecoLevel.setIdentifier(PROPERTY_ECO_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -560,7 +520,6 @@ public class Trips {
              * @return The builder
              */
             public Builder setThresholds(Property<EcoDrivingThreshold>[] thresholds) {
-                this.thresholds.clear();
                 for (int i = 0; i < thresholds.length; i++) {
                     addThreshold(thresholds[i]);
                 }
@@ -577,7 +536,6 @@ public class Trips {
             public Builder addThreshold(Property<EcoDrivingThreshold> threshold) {
                 threshold.setIdentifier(PROPERTY_THRESHOLDS);
                 addProperty(threshold);
-                thresholds.add(threshold);
                 return this;
             }
             
@@ -586,8 +544,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setTotalFuelConsumption(Property<Volume> totalFuelConsumption) {
-                this.totalFuelConsumption = totalFuelConsumption.setIdentifier(PROPERTY_TOTAL_FUEL_CONSUMPTION);
-                addProperty(this.totalFuelConsumption);
+                Property property = totalFuelConsumption.setIdentifier(PROPERTY_TOTAL_FUEL_CONSUMPTION);
+                addProperty(property);
                 return this;
             }
             
@@ -596,8 +554,8 @@ public class Trips {
              * @return The builder
              */
             public Builder setTotalIdleFuelConsumption(Property<Volume> totalIdleFuelConsumption) {
-                this.totalIdleFuelConsumption = totalIdleFuelConsumption.setIdentifier(PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION);
-                addProperty(this.totalIdleFuelConsumption);
+                Property property = totalIdleFuelConsumption.setIdentifier(PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION);
+                addProperty(property);
                 return this;
             }
             
@@ -606,8 +564,18 @@ public class Trips {
              * @return The builder
              */
             public Builder setMaximumSpeed(Property<Speed> maximumSpeed) {
-                this.maximumSpeed = maximumSpeed.setIdentifier(PROPERTY_MAXIMUM_SPEED);
-                addProperty(this.maximumSpeed);
+                Property property = maximumSpeed.setIdentifier(PROPERTY_MAXIMUM_SPEED);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param roadType Type of road travelled on.
+             * @return The builder
+             */
+            public Builder setRoadType(Property<RoadType> roadType) {
+                Property property = roadType.setIdentifier(PROPERTY_ROAD_TYPE);
+                addProperty(property);
                 return this;
             }
         }
@@ -700,6 +668,42 @@ public class Trips {
         private final byte value;
     
         EcoLevel(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum RoadType implements ByteEnum {
+        PRIVATE_OR_GRAVEL((byte) 0x00),
+        LOCAL((byte) 0x01),
+        COUNTY((byte) 0x02),
+        RURAL((byte) 0x03),
+        FEDERAL_HIGHWAY((byte) 0x04),
+        HIGHWAY((byte) 0x05),
+        COUNTRY((byte) 0x06),
+        NATIONAL((byte) 0x07);
+    
+        public static RoadType fromByte(byte byteValue) throws CommandParseException {
+            RoadType[] values = RoadType.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                RoadType state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(RoadType.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        RoadType(byte value) {
             this.value = value;
         }
     

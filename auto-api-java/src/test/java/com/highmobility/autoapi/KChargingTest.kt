@@ -71,7 +71,37 @@ class KChargingTest : BaseTest() {
             "21000401000101" +  // Immediate preconditioning is active
             "22000401000101" +  // Preconditioning is enabled for departure
             "23000401000101" +  // Preconditioning not possible because battery or fuel is low
-            "24000D01000A0c044051800000000000" // Battery capacity is 70.0Kwh
+            "24000D01000A0c044051800000000000" +  // Battery capacity is 70.0kWh
+            "25000D01000A1402405e000000000000" +  // Auxiliary power is 120.0kW.
+            "26000401000100" +  // Charging complete lock status is 'inactive'.
+            "27000D01000A0c044058c00000000000" +  // Maximum available battery capacity is 99.0kWh
+            "28000401000101" +  // Charging ended because 'goal_reached'.
+            "29000401000101" +  // Charging has 'one' phase.
+            "2a000D01000A0c04405de00000000000" +  // Current energy content of the high-voltage battery is 119.5kWh.
+            "2b000D01000A0c04403ec00000000000" +  // Energy required to fully charge the battery is 30.75kWh.
+            "2c000401000101" +  // Single instant charging function is 'active'.
+            "2d000401000101" +  // Charging duration is displayed in the vehicle.
+            "2e000401000101" +  // Departure time display is showing 'reachable'.
+            "2f00050100020100" +  // Charging restriction is 'active' and set to 'max'.
+            "30000401000100" +  // Charging limit is 'inactive'.
+            "31000D01000A09004059000000000000" +  // Charging current limit is 100.0A.
+            "32000401000101" +  // Smart charging option is set to 'renewable_energy'.
+            "33000401000100" +  // Charging plug is 'unlocked'.
+            "34000401000101" +  // Charging flap is 'locked'.
+            "35000401000101" +  // Charging process acoustic limitation is 'automatic'.
+            "36000D01000A09004014000000000000" +  // Minimum charging current is 5.0A.
+            "37000D01000A12044072c00000000000" +  // Remaining electric range target is 300.0km.
+            "38000601000300051e" +  // Vehicle will be fully charged on monday at 05:30.
+            "390005010002051e" +  // Preconditioning scheduled departure time is at 05:30.
+            "3a000D01000A0701405b800000000000" +  // Preconditioning is completed in 110.0min.
+            "3b000D01000A0a00405e000000000000" +  // HV battery voltage is 120.0V.
+            "3c000E01000B0017014055400000000000" +  // Battery highest temperature is 85.0C.
+            "3d000401000100" +  // Battery temperature control system demands high cooling.
+            "3e000D01000A090040091eb851eb851f" +  // Charging current is 3.14A.
+            "3f000401000101" +  // Battery is in an active state.
+            "40000401000100" +  // State of battery LED is no colour.
+            "41000D01000A1701404fb33333333333" +  // Battery cooling temperature is 63.4C.
+            "42000E01000B0017014055400000000000" // Battery highest temperature is 85.0C.
     )
     
     @Test
@@ -120,11 +150,40 @@ class KChargingTest : BaseTest() {
         builder.setPreconditioningDepartureEnabled(Property(EnabledState.ENABLED))
         builder.setPreconditioningError(Property(Charging.PreconditioningError.NOT_POSSIBLE_LOW))
         builder.setBatteryCapacity(Property(Energy(70.0, Energy.Unit.KILOWATT_HOURS)))
+        builder.setAuxiliaryPower(Property(Power(120.0, Power.Unit.KILOWATTS)))
+        builder.setChargingCompleteLock(Property(ActiveState.INACTIVE))
+        builder.setBatteryMaxAvailable(Property(Energy(99.0, Energy.Unit.KILOWATT_HOURS)))
+        builder.setChargingEndReason(Property(Charging.ChargingEndReason.GOAL_REACHED))
+        builder.setChargingPhases(Property(Charging.ChargingPhases.ONE))
+        builder.setBatteryEnergy(Property(Energy(119.5, Energy.Unit.KILOWATT_HOURS)))
+        builder.setBatteryEnergyChargable(Property(Energy(30.75, Energy.Unit.KILOWATT_HOURS)))
+        builder.setChargingSingleImmediate(Property(ActiveState.ACTIVE))
+        builder.setChargingTimeDisplay(Property(Charging.ChargingTimeDisplay.DISPLAY_DURATION))
+        builder.setDepartureTimeDisplay(Property(Charging.DepartureTimeDisplay.REACHABLE))
+        builder.setRestriction(Property(ChargingRestriction(ActiveState.ACTIVE, ChargingRestriction.Limit.MAX)))
+        builder.setLimitStatus(Property(ActiveState.INACTIVE))
+        builder.setCurrentLimit(Property(ElectricCurrent(100.0, ElectricCurrent.Unit.AMPERES)))
+        builder.setSmartChargingOption(Property(Charging.SmartChargingOption.RENEWABLE_ENERGY))
+        builder.setPlugLockStatus(Property(LockState.UNLOCKED))
+        builder.setFlapLockStatus(Property(LockState.LOCKED))
+        builder.setAcousticLimit(Property(Charging.AcousticLimit.AUTOMATIC))
+        builder.setMinChargingCurrent(Property(ElectricCurrent(5.0, ElectricCurrent.Unit.AMPERES)))
+        builder.setEstimatedRangeTarget(Property(Length(300.0, Length.Unit.KILOMETERS)))
+        builder.setFullyChargedEndTimes(Property(WeekdayTime(Weekday.MONDAY, Time(5, 30))))
+        builder.setPreconditioningScheduledTime(Property(Time(5, 30)))
+        builder.setPreconditioningRemainingTime(Property(Duration(110.0, Duration.Unit.MINUTES)))
+        builder.setBatteryVoltage(Property(ElectricPotentialDifference(120.0, ElectricPotentialDifference.Unit.VOLTS)))
+        builder.setBatteryTempretatureExtremes(Property(TemperatureExtreme(TemperatureExtreme.Extreme.HIGHEST, Temperature(85.0, Temperature.Unit.CELSIUS))))
+        builder.setBatteryTemperatureControlDemand(Property(Charging.BatteryTemperatureControlDemand.HIGH_COOLING))
+        builder.setChargingCurrent(Property(ElectricCurrent(3.14, ElectricCurrent.Unit.AMPERES)))
+        builder.setBatteryStatus(Property(Charging.BatteryStatus.ACTIVE))
+        builder.setBatteryLed(Property(Charging.BatteryLed.NO_COLOUR))
+        builder.setBatteryCoolingTemperature(Property(Temperature(63.4, Temperature.Unit.CELSIUS)))
+        builder.setBatteryTemperatureExtremes(Property(TemperatureExtreme(TemperatureExtreme.Extreme.HIGHEST, Temperature(85.0, Temperature.Unit.CELSIUS))))
         testState(builder.build())
     }
     
     private fun testState(state: Charging.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.estimatedRange.value?.value == 432.1)
         assertTrue(state.estimatedRange.value?.unit == Length.Unit.KILOMETERS)
         assertTrue(state.batteryLevel.value == 0.5)
@@ -187,6 +246,56 @@ class KChargingTest : BaseTest() {
         assertTrue(state.preconditioningError.value == Charging.PreconditioningError.NOT_POSSIBLE_LOW)
         assertTrue(state.batteryCapacity.value?.value == 70.0)
         assertTrue(state.batteryCapacity.value?.unit == Energy.Unit.KILOWATT_HOURS)
+        assertTrue(state.auxiliaryPower.value?.value == 120.0)
+        assertTrue(state.auxiliaryPower.value?.unit == Power.Unit.KILOWATTS)
+        assertTrue(state.chargingCompleteLock.value == ActiveState.INACTIVE)
+        assertTrue(state.batteryMaxAvailable.value?.value == 99.0)
+        assertTrue(state.batteryMaxAvailable.value?.unit == Energy.Unit.KILOWATT_HOURS)
+        assertTrue(state.chargingEndReason.value == Charging.ChargingEndReason.GOAL_REACHED)
+        assertTrue(state.chargingPhases.value == Charging.ChargingPhases.ONE)
+        assertTrue(state.batteryEnergy.value?.value == 119.5)
+        assertTrue(state.batteryEnergy.value?.unit == Energy.Unit.KILOWATT_HOURS)
+        assertTrue(state.batteryEnergyChargable.value?.value == 30.75)
+        assertTrue(state.batteryEnergyChargable.value?.unit == Energy.Unit.KILOWATT_HOURS)
+        assertTrue(state.chargingSingleImmediate.value == ActiveState.ACTIVE)
+        assertTrue(state.chargingTimeDisplay.value == Charging.ChargingTimeDisplay.DISPLAY_DURATION)
+        assertTrue(state.departureTimeDisplay.value == Charging.DepartureTimeDisplay.REACHABLE)
+        assertTrue(state.restriction.value?.active == ActiveState.ACTIVE)
+        assertTrue(state.restriction.value?.limit == ChargingRestriction.Limit.MAX)
+        assertTrue(state.limitStatus.value == ActiveState.INACTIVE)
+        assertTrue(state.currentLimit.value?.value == 100.0)
+        assertTrue(state.currentLimit.value?.unit == ElectricCurrent.Unit.AMPERES)
+        assertTrue(state.smartChargingOption.value == Charging.SmartChargingOption.RENEWABLE_ENERGY)
+        assertTrue(state.plugLockStatus.value == LockState.UNLOCKED)
+        assertTrue(state.flapLockStatus.value == LockState.LOCKED)
+        assertTrue(state.acousticLimit.value == Charging.AcousticLimit.AUTOMATIC)
+        assertTrue(state.minChargingCurrent.value?.value == 5.0)
+        assertTrue(state.minChargingCurrent.value?.unit == ElectricCurrent.Unit.AMPERES)
+        assertTrue(state.estimatedRangeTarget.value?.value == 300.0)
+        assertTrue(state.estimatedRangeTarget.value?.unit == Length.Unit.KILOMETERS)
+        assertTrue(state.fullyChargedEndTimes.value?.weekday == Weekday.MONDAY)
+        assertTrue(state.fullyChargedEndTimes.value?.time?.hour == 5)
+        assertTrue(state.fullyChargedEndTimes.value?.time?.minute == 30)
+        assertTrue(state.preconditioningScheduledTime.value?.hour == 5)
+        assertTrue(state.preconditioningScheduledTime.value?.minute == 30)
+        assertTrue(state.preconditioningRemainingTime.value?.value == 110.0)
+        assertTrue(state.preconditioningRemainingTime.value?.unit == Duration.Unit.MINUTES)
+        assertTrue(state.batteryVoltage.value?.value == 120.0)
+        assertTrue(state.batteryVoltage.value?.unit == ElectricPotentialDifference.Unit.VOLTS)
+        assertTrue(state.batteryTempretatureExtremes.value?.extreme == TemperatureExtreme.Extreme.HIGHEST)
+        assertTrue(state.batteryTempretatureExtremes.value?.temperature?.value == 85.0)
+        assertTrue(state.batteryTempretatureExtremes.value?.temperature?.unit == Temperature.Unit.CELSIUS)
+        assertTrue(state.batteryTemperatureControlDemand.value == Charging.BatteryTemperatureControlDemand.HIGH_COOLING)
+        assertTrue(state.chargingCurrent.value?.value == 3.14)
+        assertTrue(state.chargingCurrent.value?.unit == ElectricCurrent.Unit.AMPERES)
+        assertTrue(state.batteryStatus.value == Charging.BatteryStatus.ACTIVE)
+        assertTrue(state.batteryLed.value == Charging.BatteryLed.NO_COLOUR)
+        assertTrue(state.batteryCoolingTemperature.value?.value == 63.4)
+        assertTrue(state.batteryCoolingTemperature.value?.unit == Temperature.Unit.CELSIUS)
+        assertTrue(state.batteryTemperatureExtremes.value?.extreme == TemperatureExtreme.Extreme.HIGHEST)
+        assertTrue(state.batteryTemperatureExtremes.value?.temperature?.value == 85.0)
+        assertTrue(state.batteryTemperatureExtremes.value?.temperature?.unit == Temperature.Unit.CELSIUS)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test
@@ -196,10 +305,10 @@ class KChargingTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00230002030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f2021222324")
-        val propertyGetter = Charging.GetState(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00230002030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142")
+        val propertyGetter = Charging.GetState(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f2021222324"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142"))
     }
     
     @Test
@@ -222,14 +331,14 @@ class KChargingTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f2021222324")
+        val identifierBytes = Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142")
         val allBytes = Bytes(COMMAND_HEADER + "002302" + identifierBytes)
         val constructed = Charging.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.CHARGING)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Charging.GetStateAvailability(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24)
+        val secondConstructed = Charging.GetStateAvailability(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

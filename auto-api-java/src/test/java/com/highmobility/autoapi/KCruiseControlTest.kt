@@ -47,7 +47,6 @@ class KCruiseControlTest : BaseTest() {
     }
     
     private fun testState(state: CruiseControl.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.cruiseControl.value == ActiveState.ACTIVE)
         assertTrue(state.limiter.value == CruiseControl.Limiter.HIGHER_SPEED_REQUESTED)
         assertTrue(state.targetSpeed.value?.value == 61.0)
@@ -55,6 +54,7 @@ class KCruiseControlTest : BaseTest() {
         assertTrue(state.adaptiveCruiseControl.value == ActiveState.INACTIVE)
         assertTrue(state.accTargetSpeed.value?.value == 67.0)
         assertTrue(state.accTargetSpeed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

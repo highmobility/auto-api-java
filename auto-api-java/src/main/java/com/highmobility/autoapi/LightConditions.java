@@ -151,10 +151,10 @@ public class LightConditions {
             return insideLight;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_OUTSIDE_LIGHT: return outsideLight.update(p);
                         case PROPERTY_INSIDE_LIGHT: return insideLight.update(p);
@@ -165,23 +165,15 @@ public class LightConditions {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            outsideLight = builder.outsideLight;
-            insideLight = builder.insideLight;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<Illuminance> outsideLight;
-            private Property<Illuminance> insideLight;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -189,8 +181,8 @@ public class LightConditions {
              * @return The builder
              */
             public Builder setOutsideLight(Property<Illuminance> outsideLight) {
-                this.outsideLight = outsideLight.setIdentifier(PROPERTY_OUTSIDE_LIGHT);
-                addProperty(this.outsideLight);
+                Property property = outsideLight.setIdentifier(PROPERTY_OUTSIDE_LIGHT);
+                addProperty(property);
                 return this;
             }
             
@@ -199,8 +191,8 @@ public class LightConditions {
              * @return The builder
              */
             public Builder setInsideLight(Property<Illuminance> insideLight) {
-                this.insideLight = insideLight.setIdentifier(PROPERTY_INSIDE_LIGHT);
-                addProperty(this.insideLight);
+                Property property = insideLight.setIdentifier(PROPERTY_INSIDE_LIGHT);
+                addProperty(property);
                 return this;
             }
         }

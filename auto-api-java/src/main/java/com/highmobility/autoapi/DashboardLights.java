@@ -156,14 +156,14 @@ public class DashboardLights {
             return bulbFailures;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<DashboardLight>> dashboardLightsBuilder = new ArrayList<>();
             final ArrayList<Property<BulbFailures>> bulbFailuresBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_DASHBOARD_LIGHTS:
                             Property<DashboardLight> dashboardLight = new Property<>(DashboardLight.class, p);
@@ -183,23 +183,15 @@ public class DashboardLights {
             bulbFailures = bulbFailuresBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            dashboardLights = builder.dashboardLights;
-            bulbFailures = builder.bulbFailures;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private final List<Property<DashboardLight>> dashboardLights = new ArrayList<>();
-            private final List<Property<BulbFailures>> bulbFailures = new ArrayList<>();
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -209,7 +201,6 @@ public class DashboardLights {
              * @return The builder
              */
             public Builder setDashboardLights(Property<DashboardLight>[] dashboardLights) {
-                this.dashboardLights.clear();
                 for (int i = 0; i < dashboardLights.length; i++) {
                     addDashboardLight(dashboardLights[i]);
                 }
@@ -226,7 +217,6 @@ public class DashboardLights {
             public Builder addDashboardLight(Property<DashboardLight> dashboardLight) {
                 dashboardLight.setIdentifier(PROPERTY_DASHBOARD_LIGHTS);
                 addProperty(dashboardLight);
-                dashboardLights.add(dashboardLight);
                 return this;
             }
             
@@ -237,7 +227,6 @@ public class DashboardLights {
              * @return The builder
              */
             public Builder setBulbFailures(Property<BulbFailures>[] bulbFailures) {
-                this.bulbFailures.clear();
                 for (int i = 0; i < bulbFailures.length; i++) {
                     addBulbFailure(bulbFailures[i]);
                 }
@@ -253,7 +242,6 @@ public class DashboardLights {
             public Builder addBulbFailure(Property<BulbFailures> bulbFailure) {
                 bulbFailure.setIdentifier(PROPERTY_BULB_FAILURES);
                 addProperty(bulbFailure);
-                bulbFailures.add(bulbFailure);
                 return this;
             }
         }

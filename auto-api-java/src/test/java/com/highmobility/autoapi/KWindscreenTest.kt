@@ -64,7 +64,6 @@ class KWindscreenTest : BaseTest() {
     }
     
     private fun testState(state: Windscreen.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.wipersStatus.value == Windscreen.WipersStatus.AUTOMATIC)
         assertTrue(state.wipersIntensity.value == Windscreen.WipersIntensity.LEVEL_3)
         assertTrue(state.windscreenDamage.value == Windscreen.WindscreenDamage.IMPACT_BUT_NO_DAMAGE_DETECTED)
@@ -75,6 +74,7 @@ class KWindscreenTest : BaseTest() {
         assertTrue(state.windscreenNeedsReplacement.value == Windscreen.WindscreenNeedsReplacement.NO_REPLACEMENT_NEEDED)
         assertTrue(state.windscreenDamageConfidence.value == 0.95)
         assertTrue(dateIsSame(state.windscreenDamageDetectionTime.value, "2017-01-10T16:32:05.000Z"))
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

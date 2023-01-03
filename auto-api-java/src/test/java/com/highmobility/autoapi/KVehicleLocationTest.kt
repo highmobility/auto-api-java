@@ -39,7 +39,8 @@ class KVehicleLocationTest : BaseTest() {
             "06000D01000A12004060b00000000000" +  // Vehicle altitude is 133.5m
             "07000D01000A1200407f400000000000" +  // Precision is 500m
             "08000401000101" +  // The GPS signal is from a real source
-            "09000B0100083fe999999999999a" // GPS signal strength is 80%
+            "09000B0100083fe999999999999a" +  // GPS signal strength is 80%
+            "0a0013010010404a428f5c28f5c3402acf4f0d844d01" // Vehicle fuzzy coordinates are 52.5200:13.4049
     )
     
     @Test
@@ -57,11 +58,11 @@ class KVehicleLocationTest : BaseTest() {
         builder.setPrecision(Property(Length(500.0, Length.Unit.METERS)))
         builder.setGpsSource(Property(VehicleLocation.GpsSource.REAL))
         builder.setGpsSignalStrength(Property(0.8))
+        builder.setFuzzyCoordinates(Property(Coordinates(52.5200, 13.4049)))
         testState(builder.build())
     }
     
     private fun testState(state: VehicleLocation.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.coordinates.value?.latitude == 52.520008)
         assertTrue(state.coordinates.value?.longitude == 13.404954)
         assertTrue(state.heading.value?.value == 13.370123)
@@ -72,6 +73,9 @@ class KVehicleLocationTest : BaseTest() {
         assertTrue(state.precision.value?.unit == Length.Unit.METERS)
         assertTrue(state.gpsSource.value == VehicleLocation.GpsSource.REAL)
         assertTrue(state.gpsSignalStrength.value == 0.8)
+        assertTrue(state.fuzzyCoordinates.value?.latitude == 52.5200)
+        assertTrue(state.fuzzyCoordinates.value?.longitude == 13.4049)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test
@@ -81,10 +85,10 @@ class KVehicleLocationTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "003000040506070809")
-        val propertyGetter = VehicleLocation.GetVehicleLocation(0x04, 0x05, 0x06, 0x07, 0x08, 0x09)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0030000405060708090a")
+        val propertyGetter = VehicleLocation.GetVehicleLocation(0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("040506070809"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0405060708090a"))
     }
     
     @Test
@@ -107,14 +111,14 @@ class KVehicleLocationTest : BaseTest() {
     
     @Test
     fun testGetVehicleLocationAvailabilitySome() {
-        val identifierBytes = Bytes("040506070809")
+        val identifierBytes = Bytes("0405060708090a")
         val allBytes = Bytes(COMMAND_HEADER + "003002" + identifierBytes)
         val constructed = VehicleLocation.GetVehicleLocationAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.VEHICLE_LOCATION)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = VehicleLocation.GetVehicleLocationAvailability(0x04, 0x05, 0x06, 0x07, 0x08, 0x09)
+        val secondConstructed = VehicleLocation.GetVehicleLocationAvailability(0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

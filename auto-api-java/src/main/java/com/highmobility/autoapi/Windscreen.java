@@ -176,10 +176,10 @@ public class Windscreen {
             createBytes();
         }
     
-        SetWindscreenDamage(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetWindscreenDamage(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_WINDSCREEN_DAMAGE: return windscreenDamage.update(p);
                         case PROPERTY_WINDSCREEN_DAMAGE_ZONE: return windscreenDamageZone.update(p);
@@ -219,10 +219,10 @@ public class Windscreen {
             createBytes();
         }
     
-        SetWindscreenReplacementNeeded(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetWindscreenReplacementNeeded(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT) return windscreenNeedsReplacement.update(p);
                     
                     return null;
@@ -269,10 +269,10 @@ public class Windscreen {
             createBytes();
         }
     
-        ControlWipers(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ControlWipers(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_WIPERS_STATUS: return wipersStatus.update(p);
                         case PROPERTY_WIPERS_INTENSITY: return wipersIntensity.update(p);
@@ -356,10 +356,10 @@ public class Windscreen {
             return windscreenDamageDetectionTime;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_WIPERS_STATUS: return wipersStatus.update(p);
                         case PROPERTY_WIPERS_INTENSITY: return wipersIntensity.update(p);
@@ -376,35 +376,15 @@ public class Windscreen {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            wipersStatus = builder.wipersStatus;
-            wipersIntensity = builder.wipersIntensity;
-            windscreenDamage = builder.windscreenDamage;
-            windscreenZoneMatrix = builder.windscreenZoneMatrix;
-            windscreenDamageZone = builder.windscreenDamageZone;
-            windscreenNeedsReplacement = builder.windscreenNeedsReplacement;
-            windscreenDamageConfidence = builder.windscreenDamageConfidence;
-            windscreenDamageDetectionTime = builder.windscreenDamageDetectionTime;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<WipersStatus> wipersStatus;
-            private Property<WipersIntensity> wipersIntensity;
-            private Property<WindscreenDamage> windscreenDamage;
-            private Property<Zone> windscreenZoneMatrix;
-            private Property<Zone> windscreenDamageZone;
-            private Property<WindscreenNeedsReplacement> windscreenNeedsReplacement;
-            private Property<Double> windscreenDamageConfidence;
-            private Property<Calendar> windscreenDamageDetectionTime;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -412,8 +392,8 @@ public class Windscreen {
              * @return The builder
              */
             public Builder setWipersStatus(Property<WipersStatus> wipersStatus) {
-                this.wipersStatus = wipersStatus.setIdentifier(PROPERTY_WIPERS_STATUS);
-                addProperty(this.wipersStatus);
+                Property property = wipersStatus.setIdentifier(PROPERTY_WIPERS_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -422,8 +402,8 @@ public class Windscreen {
              * @return The builder
              */
             public Builder setWipersIntensity(Property<WipersIntensity> wipersIntensity) {
-                this.wipersIntensity = wipersIntensity.setIdentifier(PROPERTY_WIPERS_INTENSITY);
-                addProperty(this.wipersIntensity);
+                Property property = wipersIntensity.setIdentifier(PROPERTY_WIPERS_INTENSITY);
+                addProperty(property);
                 return this;
             }
             
@@ -432,8 +412,8 @@ public class Windscreen {
              * @return The builder
              */
             public Builder setWindscreenDamage(Property<WindscreenDamage> windscreenDamage) {
-                this.windscreenDamage = windscreenDamage.setIdentifier(PROPERTY_WINDSCREEN_DAMAGE);
-                addProperty(this.windscreenDamage);
+                Property property = windscreenDamage.setIdentifier(PROPERTY_WINDSCREEN_DAMAGE);
+                addProperty(property);
                 return this;
             }
             
@@ -442,8 +422,8 @@ public class Windscreen {
              * @return The builder
              */
             public Builder setWindscreenZoneMatrix(Property<Zone> windscreenZoneMatrix) {
-                this.windscreenZoneMatrix = windscreenZoneMatrix.setIdentifier(PROPERTY_WINDSCREEN_ZONE_MATRIX);
-                addProperty(this.windscreenZoneMatrix);
+                Property property = windscreenZoneMatrix.setIdentifier(PROPERTY_WINDSCREEN_ZONE_MATRIX);
+                addProperty(property);
                 return this;
             }
             
@@ -452,8 +432,8 @@ public class Windscreen {
              * @return The builder
              */
             public Builder setWindscreenDamageZone(Property<Zone> windscreenDamageZone) {
-                this.windscreenDamageZone = windscreenDamageZone.setIdentifier(PROPERTY_WINDSCREEN_DAMAGE_ZONE);
-                addProperty(this.windscreenDamageZone);
+                Property property = windscreenDamageZone.setIdentifier(PROPERTY_WINDSCREEN_DAMAGE_ZONE);
+                addProperty(property);
                 return this;
             }
             
@@ -462,8 +442,8 @@ public class Windscreen {
              * @return The builder
              */
             public Builder setWindscreenNeedsReplacement(Property<WindscreenNeedsReplacement> windscreenNeedsReplacement) {
-                this.windscreenNeedsReplacement = windscreenNeedsReplacement.setIdentifier(PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT);
-                addProperty(this.windscreenNeedsReplacement);
+                Property property = windscreenNeedsReplacement.setIdentifier(PROPERTY_WINDSCREEN_NEEDS_REPLACEMENT);
+                addProperty(property);
                 return this;
             }
             
@@ -472,8 +452,8 @@ public class Windscreen {
              * @return The builder
              */
             public Builder setWindscreenDamageConfidence(Property<Double> windscreenDamageConfidence) {
-                this.windscreenDamageConfidence = windscreenDamageConfidence.setIdentifier(PROPERTY_WINDSCREEN_DAMAGE_CONFIDENCE);
-                addProperty(this.windscreenDamageConfidence);
+                Property property = windscreenDamageConfidence.setIdentifier(PROPERTY_WINDSCREEN_DAMAGE_CONFIDENCE);
+                addProperty(property);
                 return this;
             }
             
@@ -482,8 +462,8 @@ public class Windscreen {
              * @return The builder
              */
             public Builder setWindscreenDamageDetectionTime(Property<Calendar> windscreenDamageDetectionTime) {
-                this.windscreenDamageDetectionTime = windscreenDamageDetectionTime.setIdentifier(PROPERTY_WINDSCREEN_DAMAGE_DETECTION_TIME);
-                addProperty(this.windscreenDamageDetectionTime);
+                Property property = windscreenDamageDetectionTime.setIdentifier(PROPERTY_WINDSCREEN_DAMAGE_DETECTION_TIME);
+                addProperty(property);
                 return this;
             }
         }

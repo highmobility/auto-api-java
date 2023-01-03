@@ -164,10 +164,10 @@ public class Doors {
             createBytes();
         }
     
-        LockUnlockDoors(byte[] bytes) throws CommandParseException, PropertyParseException {
+        LockUnlockDoors(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_LOCKS_STATE) return locksState.update(p);
                     
                     return null;
@@ -267,7 +267,7 @@ public class Doors {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<Lock>> insideLocksBuilder = new ArrayList<>();
@@ -275,7 +275,7 @@ public class Doors {
             final ArrayList<Property<DoorPosition>> positionsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_INSIDE_LOCKS:
                             Property<Lock> insideLock = new Property<>(Lock.class, p);
@@ -302,29 +302,15 @@ public class Doors {
             positions = positionsBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            insideLocks = builder.insideLocks;
-            locks = builder.locks;
-            positions = builder.positions;
-            insideLocksState = builder.insideLocksState;
-            locksState = builder.locksState;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private final List<Property<Lock>> insideLocks = new ArrayList<>();
-            private final List<Property<Lock>> locks = new ArrayList<>();
-            private final List<Property<DoorPosition>> positions = new ArrayList<>();
-            private Property<LockState> insideLocksState;
-            private Property<LockState> locksState;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -334,7 +320,6 @@ public class Doors {
              * @return The builder
              */
             public Builder setInsideLocks(Property<Lock>[] insideLocks) {
-                this.insideLocks.clear();
                 for (int i = 0; i < insideLocks.length; i++) {
                     addInsideLock(insideLocks[i]);
                 }
@@ -351,7 +336,6 @@ public class Doors {
             public Builder addInsideLock(Property<Lock> insideLock) {
                 insideLock.setIdentifier(PROPERTY_INSIDE_LOCKS);
                 addProperty(insideLock);
-                insideLocks.add(insideLock);
                 return this;
             }
             
@@ -362,7 +346,6 @@ public class Doors {
              * @return The builder
              */
             public Builder setLocks(Property<Lock>[] locks) {
-                this.locks.clear();
                 for (int i = 0; i < locks.length; i++) {
                     addLock(locks[i]);
                 }
@@ -379,7 +362,6 @@ public class Doors {
             public Builder addLock(Property<Lock> lock) {
                 lock.setIdentifier(PROPERTY_LOCKS);
                 addProperty(lock);
-                locks.add(lock);
                 return this;
             }
             
@@ -390,7 +372,6 @@ public class Doors {
              * @return The builder
              */
             public Builder setPositions(Property<DoorPosition>[] positions) {
-                this.positions.clear();
                 for (int i = 0; i < positions.length; i++) {
                     addPosition(positions[i]);
                 }
@@ -407,7 +388,6 @@ public class Doors {
             public Builder addPosition(Property<DoorPosition> position) {
                 position.setIdentifier(PROPERTY_POSITIONS);
                 addProperty(position);
-                positions.add(position);
                 return this;
             }
             
@@ -416,8 +396,8 @@ public class Doors {
              * @return The builder
              */
             public Builder setInsideLocksState(Property<LockState> insideLocksState) {
-                this.insideLocksState = insideLocksState.setIdentifier(PROPERTY_INSIDE_LOCKS_STATE);
-                addProperty(this.insideLocksState);
+                Property property = insideLocksState.setIdentifier(PROPERTY_INSIDE_LOCKS_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -426,8 +406,8 @@ public class Doors {
              * @return The builder
              */
             public Builder setLocksState(Property<LockState> locksState) {
-                this.locksState = locksState.setIdentifier(PROPERTY_LOCKS_STATE);
-                addProperty(this.locksState);
+                Property property = locksState.setIdentifier(PROPERTY_LOCKS_STATE);
+                addProperty(property);
                 return this;
             }
         }

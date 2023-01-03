@@ -34,7 +34,7 @@ public enum DrivingMode implements ByteEnum {
     ECO((byte) 0x01),
     SPORT((byte) 0x02),
     SPORT_PLUS((byte) 0x03),
-    ECOPLUS((byte) 0x04),
+    ECO_PLUS((byte) 0x04),
     COMFORT((byte) 0x05);
 
     public static DrivingMode fromByte(byte byteValue) throws CommandParseException {

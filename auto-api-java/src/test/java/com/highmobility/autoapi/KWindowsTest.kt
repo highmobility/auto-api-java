@@ -68,7 +68,6 @@ class KWindowsTest : BaseTest() {
     }
     
     private fun testState(state: Windows.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.openPercentages[0].value?.location == WindowLocation.FRONT_LEFT)
         assertTrue(state.openPercentages[0].value?.openPercentage == 0.2)
         assertTrue(state.openPercentages[1].value?.location == WindowLocation.FRONT_RIGHT)
@@ -89,6 +88,7 @@ class KWindowsTest : BaseTest() {
         assertTrue(state.positions[3].value?.position == WindowPosition.Position.OPEN)
         assertTrue(state.positions[4].value?.location == WindowLocation.HATCH)
         assertTrue(state.positions[4].value?.position == WindowPosition.Position.OPEN)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

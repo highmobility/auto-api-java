@@ -126,10 +126,10 @@ public class FirmwareVersion {
             return applicationVersion;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_HMKIT_VERSION: return hmKitVersion.update(p);
                         case PROPERTY_HMKIT_BUILD_NAME: return hmKitBuildName.update(p);
@@ -141,25 +141,15 @@ public class FirmwareVersion {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            hmKitVersion = builder.hmKitVersion;
-            hmKitBuildName = builder.hmKitBuildName;
-            applicationVersion = builder.applicationVersion;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<HmkitVersion> hmKitVersion;
-            private Property<String> hmKitBuildName;
-            private Property<String> applicationVersion;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -167,8 +157,8 @@ public class FirmwareVersion {
              * @return The builder
              */
             public Builder setHmKitVersion(Property<HmkitVersion> hmKitVersion) {
-                this.hmKitVersion = hmKitVersion.setIdentifier(PROPERTY_HMKIT_VERSION);
-                addProperty(this.hmKitVersion);
+                Property property = hmKitVersion.setIdentifier(PROPERTY_HMKIT_VERSION);
+                addProperty(property);
                 return this;
             }
             
@@ -177,8 +167,8 @@ public class FirmwareVersion {
              * @return The builder
              */
             public Builder setHmKitBuildName(Property<String> hmKitBuildName) {
-                this.hmKitBuildName = hmKitBuildName.setIdentifier(PROPERTY_HMKIT_BUILD_NAME);
-                addProperty(this.hmKitBuildName);
+                Property property = hmKitBuildName.setIdentifier(PROPERTY_HMKIT_BUILD_NAME);
+                addProperty(property);
                 return this;
             }
             
@@ -187,8 +177,8 @@ public class FirmwareVersion {
              * @return The builder
              */
             public Builder setApplicationVersion(Property<String> applicationVersion) {
-                this.applicationVersion = applicationVersion.setIdentifier(PROPERTY_APPLICATION_VERSION);
-                addProperty(this.applicationVersion);
+                Property property = applicationVersion.setIdentifier(PROPERTY_APPLICATION_VERSION);
+                addProperty(property);
                 return this;
             }
         }

@@ -156,10 +156,10 @@ public class Ignition {
             createBytes();
         }
     
-        TurnIgnitionOnOff(byte[] bytes) throws CommandParseException, PropertyParseException {
+        TurnIgnitionOnOff(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATE) return state.update(p);
                     
                     return null;
@@ -204,10 +204,10 @@ public class Ignition {
             return state;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
                         case PROPERTY_ACCESSORIES_STATUS: return accessoriesStatus.update(p);
@@ -219,25 +219,15 @@ public class Ignition {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            status = builder.status;
-            accessoriesStatus = builder.accessoriesStatus;
-            state = builder.state;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<IgnitionState> status;
-            private Property<IgnitionState> accessoriesStatus;
-            private Property<IgnitionState> state;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -247,8 +237,8 @@ public class Ignition {
              */
             @Deprecated
             public Builder setStatus(Property<IgnitionState> status) {
-                this.status = status.setIdentifier(PROPERTY_STATUS);
-                addProperty(this.status);
+                Property property = status.setIdentifier(PROPERTY_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -259,8 +249,8 @@ public class Ignition {
              */
             @Deprecated
             public Builder setAccessoriesStatus(Property<IgnitionState> accessoriesStatus) {
-                this.accessoriesStatus = accessoriesStatus.setIdentifier(PROPERTY_ACCESSORIES_STATUS);
-                addProperty(this.accessoriesStatus);
+                Property property = accessoriesStatus.setIdentifier(PROPERTY_ACCESSORIES_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -269,8 +259,8 @@ public class Ignition {
              * @return The builder
              */
             public Builder setState(Property<IgnitionState> state) {
-                this.state = state.setIdentifier(PROPERTY_STATE);
-                addProperty(this.state);
+                Property property = state.setIdentifier(PROPERTY_STATE);
+                addProperty(property);
                 return this;
             }
         }

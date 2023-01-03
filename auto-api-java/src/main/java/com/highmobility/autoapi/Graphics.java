@@ -58,10 +58,10 @@ public class Graphics {
             createBytes();
         }
     
-        DisplayImage(byte[] bytes) throws CommandParseException, PropertyParseException {
+        DisplayImage(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_IMAGE_URL) return imageURL.update(p);
                     
                     return null;

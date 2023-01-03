@@ -58,7 +58,6 @@ class KNotificationsTest : BaseTest() {
     }
     
     private fun testState(state: Notifications.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.text.value == "Open Garage")
         assertTrue(state.actionItems[0].value?.id == 27)
         assertTrue(state.actionItems[0].value?.name == "Open")
@@ -66,6 +65,7 @@ class KNotificationsTest : BaseTest() {
         assertTrue(state.actionItems[1].value?.name == "Cancel")
         assertTrue(state.activatedAction.value == 27)
         assertTrue(state.clear.value == Notifications.Clear.CLEAR)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

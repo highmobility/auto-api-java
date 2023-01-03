@@ -184,14 +184,14 @@ public class Seats {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<PersonDetected>> personsDetectedBuilder = new ArrayList<>();
             final ArrayList<Property<SeatbeltState>> seatbeltsStateBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_PERSONS_DETECTED:
                             Property<PersonDetected> personDetected = new Property<>(PersonDetected.class, p);
@@ -211,23 +211,15 @@ public class Seats {
             seatbeltsState = seatbeltsStateBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            personsDetected = builder.personsDetected;
-            seatbeltsState = builder.seatbeltsState;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private final List<Property<PersonDetected>> personsDetected = new ArrayList<>();
-            private final List<Property<SeatbeltState>> seatbeltsState = new ArrayList<>();
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -237,7 +229,6 @@ public class Seats {
              * @return The builder
              */
             public Builder setPersonsDetected(Property<PersonDetected>[] personsDetected) {
-                this.personsDetected.clear();
                 for (int i = 0; i < personsDetected.length; i++) {
                     addPersonDetected(personsDetected[i]);
                 }
@@ -254,7 +245,6 @@ public class Seats {
             public Builder addPersonDetected(Property<PersonDetected> personDetected) {
                 personDetected.setIdentifier(PROPERTY_PERSONS_DETECTED);
                 addProperty(personDetected);
-                personsDetected.add(personDetected);
                 return this;
             }
             
@@ -265,7 +255,6 @@ public class Seats {
              * @return The builder
              */
             public Builder setSeatbeltsState(Property<SeatbeltState>[] seatbeltsState) {
-                this.seatbeltsState.clear();
                 for (int i = 0; i < seatbeltsState.length; i++) {
                     addSeatbeltState(seatbeltsState[i]);
                 }
@@ -281,7 +270,6 @@ public class Seats {
             public Builder addSeatbeltState(Property<SeatbeltState> seatbeltState) {
                 seatbeltState.setIdentifier(PROPERTY_SEATBELTS_STATE);
                 addProperty(seatbeltState);
-                seatbeltsState.add(seatbeltState);
                 return this;
             }
         }

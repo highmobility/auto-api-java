@@ -50,8 +50,8 @@ class KValetModeTest : BaseTest() {
     }
     
     private fun testState(state: ValetMode.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.status.value == ActiveState.ACTIVE)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

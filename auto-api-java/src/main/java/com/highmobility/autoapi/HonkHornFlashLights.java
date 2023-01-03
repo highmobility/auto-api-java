@@ -175,10 +175,10 @@ public class HonkHornFlashLights {
             createBytes();
         }
     
-        HonkFlash(byte[] bytes) throws CommandParseException, PropertyParseException {
+        HonkFlash(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_FLASH_TIMES: return flashTimes.update(p);
                         case PROPERTY_HONK_TIME: return honkTime.update(p);
@@ -218,10 +218,10 @@ public class HonkHornFlashLights {
             createBytes();
         }
     
-        ActivateDeactivateEmergencyFlasher(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ActivateDeactivateEmergencyFlasher(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_EMERGENCY_FLASHERS_STATE) return emergencyFlashersState.update(p);
                     
                     return null;
@@ -246,10 +246,10 @@ public class HonkHornFlashLights {
             return flashers;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_FLASHERS: return flashers.update(p);
                     }
@@ -259,21 +259,15 @@ public class HonkHornFlashLights {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            flashers = builder.flashers;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<Flashers> flashers;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -281,8 +275,8 @@ public class HonkHornFlashLights {
              * @return The builder
              */
             public Builder setFlashers(Property<Flashers> flashers) {
-                this.flashers = flashers.setIdentifier(PROPERTY_FLASHERS);
-                addProperty(this.flashers);
+                Property property = flashers.setIdentifier(PROPERTY_FLASHERS);
+                addProperty(property);
                 return this;
             }
         }

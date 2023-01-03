@@ -140,6 +140,17 @@ public class CommandTest extends BaseTest {
         assertTrue(command.getVin().equals("JF2SHBDC7CH451869"));
     }
 
+    @Test public void vinAndTimestamp() {
+        ParkingBrake.State.Builder builder = new ParkingBrake.State.Builder();
+        builder.setStatus(new Property(ActiveState.ACTIVE));
+
+        builder.setVin("JF2SHBDC7CH451869");
+        builder.setTimestamp(Calendar.getInstance());
+        ParkingBrake.State command = builder.build();
+        String vin = command.getVin();
+        assertTrue(vin.equals("JF2SHBDC7CH451869"));
+    }
+
     @Test public void brand() {
         Bytes bytes = new Bytes(parkingBrakeCommand + "A4000401000105");
         ParkingBrake.State command = (ParkingBrake.State) CommandResolver.resolve(bytes);
@@ -226,10 +237,57 @@ public class CommandTest extends BaseTest {
         assertTrue(resolved2.getPropertyIdentifiers().equals("0102"));
     }
 
+    @Test public void getState() {
+        Bytes waitingForBytes = new Bytes(COMMAND_HEADER + "004700");
+        ParkingTicket.GetParkingTicket getter = new ParkingTicket.GetParkingTicket();
+        assertTrue(getter.propertyIdentifiers.equals(""));
+
+        setEnvironment(CommandResolver.Environment.VEHICLE);
+        ParkingTicket.GetParkingTicket resolved =
+                (ParkingTicket.GetParkingTicket) CommandResolver.resolve(waitingForBytes);
+        assertTrue(resolved.propertyIdentifiers.equals(""));
+    }
+
+    @Test public void stateParsingInvalidPropertyPrintsWarningLog() {
+        Diagnostics.State.Builder builder = new Diagnostics.State.Builder();
+        builder.addProperty(new Property(0xdf, 1f));
+        warningLogExpected(1, () -> builder.build());
+    }
+
     @Test public void invalidAvailabilityThrows() {
         assertThrows(CommandParseException.class, () -> {
             // invalid type
             new GetAvailabilityCommand((new Bytes(COMMAND_HEADER + "0023AA")).getByteArray());
         });
+    }
+
+    @Test public void setVinAndBrandReturnsChildClass() {
+        // If use setCommand's child class builder, will return the child class
+        VehicleStatus.State.Builder builder = new VehicleStatus.State.Builder();
+
+        assertTrue(builder.setVin("123").build() instanceof VehicleStatus.State);
+        assertTrue(builder.setBrand(Brand.BMW).build() instanceof VehicleStatus.State);
+
+        assertTrue(builder.addProperty(new Property("aa")).build() instanceof VehicleStatus.State);
+        assertTrue(builder.setNonce(new Bytes("aabb")).build() instanceof VehicleStatus.State);
+        assertTrue(builder.setSignature(new Bytes("aabb")).build() instanceof VehicleStatus.State);
+        assertTrue(builder.setTimestamp(Calendar.getInstance()).build() instanceof VehicleStatus.State);
+
+        assertTrue(builder.build() instanceof VehicleStatus.State);
+    }
+
+    @Test public void canCreateBaseSetter() {
+        // If use base command builder, will return the parent base
+        SetCommand.BaseBuilder builder = new SetCommand.BaseBuilder(2);
+
+        assertTrue(builder.setVin("123").build() instanceof SetCommand);
+        assertTrue(builder.setBrand(Brand.BMW).build() instanceof SetCommand);
+
+        assertTrue(builder.addProperty(new Property("aa")).build() instanceof SetCommand);
+        assertTrue(builder.setNonce(new Bytes("aabb")).build() instanceof SetCommand);
+        assertTrue(builder.setSignature(new Bytes("aabb")).build() instanceof SetCommand);
+        assertTrue(builder.setTimestamp(Calendar.getInstance()).build() instanceof SetCommand);
+
+        assertTrue(builder.build() instanceof SetCommand);
     }
 }

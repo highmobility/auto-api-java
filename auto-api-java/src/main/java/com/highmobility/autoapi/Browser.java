@@ -58,10 +58,10 @@ public class Browser {
             createBytes();
         }
     
-        LoadUrl(byte[] bytes) throws CommandParseException, PropertyParseException {
+        LoadUrl(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_URL) return url.update(p);
                     
                     return null;

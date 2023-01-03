@@ -43,10 +43,10 @@ class KRemoteControlTest : BaseTest() {
     }
     
     private fun testState(state: RemoteControl.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.controlMode.value == RemoteControl.ControlMode.STARTED)
         assertTrue(state.angle.value?.value == 50.0)
         assertTrue(state.angle.value?.unit == Angle.Unit.DEGREES)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

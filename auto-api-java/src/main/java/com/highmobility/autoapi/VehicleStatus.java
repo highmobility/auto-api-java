@@ -80,13 +80,13 @@ public class VehicleStatus {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<Command>> statesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATES:
                             Property<Command> state = new Property<>(Command.class, p);
@@ -101,21 +101,15 @@ public class VehicleStatus {
             states = statesBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            states = builder.states;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private final List<Property<Command>> states = new ArrayList<>();
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -125,7 +119,6 @@ public class VehicleStatus {
              * @return The builder
              */
             public Builder setStates(Property<Command>[] states) {
-                this.states.clear();
                 for (int i = 0; i < states.length; i++) {
                     addState(states[i]);
                 }
@@ -141,7 +134,6 @@ public class VehicleStatus {
             public Builder addState(Property<Command> state) {
                 state.setIdentifier(PROPERTY_STATES);
                 addProperty(state);
-                states.add(state);
                 return this;
             }
         }

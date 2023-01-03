@@ -57,12 +57,12 @@ class KParkingTicketTest : BaseTest() {
     }
     
     private fun testState(state: ParkingTicket.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.status.value == ParkingTicket.Status.ENDED)
         assertTrue(state.operatorName.value == "Berlin Parking")
         assertTrue(state.operatorTicketID.value == "6489AB4233")
         assertTrue(dateIsSame(state.ticketStartTime.value, "2017-01-10T19:34:22.000Z"))
         assertTrue(dateIsSame(state.ticketEndTime.value, "2019-10-08T11:21:45.000Z"))
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

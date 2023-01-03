@@ -42,7 +42,8 @@ public enum EngineType implements ByteEnum {
     DIESEL((byte) 0x09),
     GASOLINE((byte) 0x0a),
     CNG((byte) 0x0b),
-    LPG((byte) 0x0c);
+    LPG((byte) 0x0c),
+    HYBRID((byte) 0x0d);
 
     public static EngineType fromByte(byte byteValue) throws CommandParseException {
         EngineType[] values = EngineType.values();

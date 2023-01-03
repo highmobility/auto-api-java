@@ -25,6 +25,7 @@ package com.highmobility.autoapi
 
 import com.highmobility.autoapi.property.Property
 import com.highmobility.autoapi.value.*
+import com.highmobility.autoapi.value.measurement.*
 import com.highmobility.value.Bytes
 
 import org.junit.jupiter.api.Test
@@ -35,7 +36,13 @@ class KEngineTest : BaseTest() {
     val bytes = Bytes(COMMAND_HEADER + "006901" + 
             "01000401000100" +  // Engine is off
             "02000401000101" +  // Automatic engine start-stop system is currently active
-            "03000401000101" // Automatic start-stop system is enabled
+            "03000401000101" +  // Automatic start-stop system is enabled
+            "04000401000101" +  // Use of engine pre-conditioning is 'enabled'.
+            "05000401000101" +  // Pre-conditioning is 'active'.
+            "06000D01000A0701402f000000000000" +  // Pre-conditioning remaining time is 15.5min.
+            "07000401000100" +  // Pre-conditioning error is 'low_fuel'.
+            "08000401000100" +  // Pre-conditioning status is 'standby'.
+            "09000401000100" // Engine fail-safe mode is inactive.
     )
     
     @Test
@@ -50,14 +57,27 @@ class KEngineTest : BaseTest() {
         builder.setStatus(Property(OnOffState.OFF))
         builder.setStartStopState(Property(ActiveState.ACTIVE))
         builder.setStartStopEnabled(Property(EnabledState.ENABLED))
+        builder.setPreconditioningEnabled(Property(EnabledState.ENABLED))
+        builder.setPreconditioningActive(Property(ActiveState.ACTIVE))
+        builder.setPreconditioningRemainingTime(Property(Duration(15.5, Duration.Unit.MINUTES)))
+        builder.setPreconditioningError(Property(Engine.PreconditioningError.LOW_FUEL))
+        builder.setPreconditioningStatus(Property(Engine.PreconditioningStatus.STANDBY))
+        builder.setLimpMode(Property(ActiveState.INACTIVE))
         testState(builder.build())
     }
     
     private fun testState(state: Engine.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.status.value == OnOffState.OFF)
         assertTrue(state.startStopState.value == ActiveState.ACTIVE)
         assertTrue(state.startStopEnabled.value == EnabledState.ENABLED)
+        assertTrue(state.preconditioningEnabled.value == EnabledState.ENABLED)
+        assertTrue(state.preconditioningActive.value == ActiveState.ACTIVE)
+        assertTrue(state.preconditioningRemainingTime.value?.value == 15.5)
+        assertTrue(state.preconditioningRemainingTime.value?.unit == Duration.Unit.MINUTES)
+        assertTrue(state.preconditioningError.value == Engine.PreconditioningError.LOW_FUEL)
+        assertTrue(state.preconditioningStatus.value == Engine.PreconditioningStatus.STANDBY)
+        assertTrue(state.limpMode.value == ActiveState.INACTIVE)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test
@@ -67,10 +87,10 @@ class KEngineTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "006900010203")
-        val propertyGetter = Engine.GetState(0x01, 0x02, 0x03)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "006900010203040506070809")
+        val propertyGetter = Engine.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506070809"))
     }
     
     @Test
@@ -93,14 +113,14 @@ class KEngineTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("010203")
+        val identifierBytes = Bytes("010203040506070809")
         val allBytes = Bytes(COMMAND_HEADER + "006902" + identifierBytes)
         val constructed = Engine.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.ENGINE)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Engine.GetStateAvailability(0x01, 0x02, 0x03)
+        val secondConstructed = Engine.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

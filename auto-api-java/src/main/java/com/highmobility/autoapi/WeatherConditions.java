@@ -78,10 +78,10 @@ public class WeatherConditions {
             return rainIntensity;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_RAIN_INTENSITY: return rainIntensity.update(p);
                     }
@@ -91,21 +91,15 @@ public class WeatherConditions {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            rainIntensity = builder.rainIntensity;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<Double> rainIntensity;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -113,8 +107,8 @@ public class WeatherConditions {
              * @return The builder
              */
             public Builder setRainIntensity(Property<Double> rainIntensity) {
-                this.rainIntensity = rainIntensity.setIdentifier(PROPERTY_RAIN_INTENSITY);
-                addProperty(this.rainIntensity);
+                Property property = rainIntensity.setIdentifier(PROPERTY_RAIN_INTENSITY);
+                addProperty(property);
                 return this;
             }
         }

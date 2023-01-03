@@ -25,7 +25,8 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
-import com.highmobility.autoapi.value.HvacWeekdayStartingTime;
+import com.highmobility.autoapi.value.WeekdayTime;
+import com.highmobility.autoapi.value.measurement.Power;
 import com.highmobility.autoapi.value.measurement.Temperature;
 import com.highmobility.value.Bytes;
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public class Climate {
     public static final byte PROPERTY_DEFROSTING_TEMPERATURE_SETTING = 0x09;
     public static final byte PROPERTY_HVAC_WEEKDAY_STARTING_TIMES = 0x0b;
     public static final byte PROPERTY_REAR_TEMPERATURE_SETTING = 0x0c;
+    public static final byte PROPERTY_HUMIDITY = 0x0d;
+    public static final byte PROPERTY_AIR_CONDITIONER_COMPRESSOR_POWER = 0x0e;
 
     /**
      * Get Climate property availability information
@@ -148,12 +151,12 @@ public class Climate {
      * Change starting times
      */
     public static class ChangeStartingTimes extends SetCommand {
-        List<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimes;
+        List<Property<WeekdayTime>> hvacWeekdayStartingTimes;
     
         /**
          * @return The hvac weekday starting times
          */
-        public List<Property<HvacWeekdayStartingTime>> getHvacWeekdayStartingTimes() {
+        public List<Property<WeekdayTime>> getHvacWeekdayStartingTimes() {
             return hvacWeekdayStartingTimes;
         }
         
@@ -162,13 +165,13 @@ public class Climate {
          * 
          * @param hvacWeekdayStartingTimes The hvac weekday starting times
          */
-        public ChangeStartingTimes(List<HvacWeekdayStartingTime> hvacWeekdayStartingTimes) {
+        public ChangeStartingTimes(List<WeekdayTime> hvacWeekdayStartingTimes) {
             super(IDENTIFIER);
         
-            final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
+            final ArrayList<Property<WeekdayTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
             if (hvacWeekdayStartingTimes != null) {
-                for (HvacWeekdayStartingTime hvacWeekdayStartingTime : hvacWeekdayStartingTimes) {
-                    Property<HvacWeekdayStartingTime> prop = new Property<>(0x0b, hvacWeekdayStartingTime);
+                for (WeekdayTime hvacWeekdayStartingTime : hvacWeekdayStartingTimes) {
+                    Property<WeekdayTime> prop = new Property<>(0x0b, hvacWeekdayStartingTime);
                     hvacWeekdayStartingTimesBuilder.add(prop);
                     addProperty(prop);
                 }
@@ -177,15 +180,15 @@ public class Climate {
             createBytes();
         }
     
-        ChangeStartingTimes(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ChangeStartingTimes(byte[] bytes) throws PropertyParseException {
             super(bytes);
         
-            final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
+            final ArrayList<Property<WeekdayTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_HVAC_WEEKDAY_STARTING_TIMES) {
-                        Property<HvacWeekdayStartingTime> hvacWeekdayStartingTime = new Property<>(HvacWeekdayStartingTime.class, p);
+                        Property<WeekdayTime> hvacWeekdayStartingTime = new Property<>(WeekdayTime.class, p);
                         hvacWeekdayStartingTimesBuilder.add(hvacWeekdayStartingTime);
                         return hvacWeekdayStartingTime;
                     }
@@ -226,10 +229,10 @@ public class Climate {
             createBytes();
         }
     
-        StartStopHvac(byte[] bytes) throws CommandParseException, PropertyParseException {
+        StartStopHvac(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_HVAC_STATE) return hvacState.update(p);
                     
                     return null;
@@ -266,10 +269,10 @@ public class Climate {
             createBytes();
         }
     
-        StartStopDefogging(byte[] bytes) throws CommandParseException, PropertyParseException {
+        StartStopDefogging(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_DEFOGGING_STATE) return defoggingState.update(p);
                     
                     return null;
@@ -306,10 +309,10 @@ public class Climate {
             createBytes();
         }
     
-        StartStopDefrosting(byte[] bytes) throws CommandParseException, PropertyParseException {
+        StartStopDefrosting(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_DEFROSTING_STATE) return defrostingState.update(p);
                     
                     return null;
@@ -346,10 +349,10 @@ public class Climate {
             createBytes();
         }
     
-        StartStopIonising(byte[] bytes) throws CommandParseException, PropertyParseException {
+        StartStopIonising(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_IONISING_STATE) return ionisingState.update(p);
                     
                     return null;
@@ -407,10 +410,10 @@ public class Climate {
             createBytes();
         }
     
-        SetTemperatureSettings(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetTemperatureSettings(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_DRIVER_TEMPERATURE_SETTING: return driverTemperatureSetting.update(p);
                         case PROPERTY_PASSENGER_TEMPERATURE_SETTING: return passengerTemperatureSetting.update(p);
@@ -439,8 +442,10 @@ public class Climate {
         Property<ActiveState> defrostingState = new Property<>(ActiveState.class, PROPERTY_DEFROSTING_STATE);
         Property<ActiveState> ionisingState = new Property<>(ActiveState.class, PROPERTY_IONISING_STATE);
         Property<Temperature> defrostingTemperatureSetting = new Property<>(Temperature.class, PROPERTY_DEFROSTING_TEMPERATURE_SETTING);
-        List<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimes;
+        List<Property<WeekdayTime>> hvacWeekdayStartingTimes;
         Property<Temperature> rearTemperatureSetting = new Property<>(Temperature.class, PROPERTY_REAR_TEMPERATURE_SETTING);
+        Property<Double> humidity = new Property<>(Double.class, PROPERTY_HUMIDITY);
+        Property<Power> airConditionerCompressorPower = new Property<>(Power.class, PROPERTY_AIR_CONDITIONER_COMPRESSOR_POWER);
     
         /**
          * @return The inside temperature
@@ -508,7 +513,7 @@ public class Climate {
         /**
          * @return The hvac weekday starting times
          */
-        public List<Property<HvacWeekdayStartingTime>> getHvacWeekdayStartingTimes() {
+        public List<Property<WeekdayTime>> getHvacWeekdayStartingTimes() {
             return hvacWeekdayStartingTimes;
         }
     
@@ -519,13 +524,27 @@ public class Climate {
             return rearTemperatureSetting;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        /**
+         * @return Measured relative humidity between 0.0 - 1.0.
+         */
+        public Property<Double> getHumidity() {
+            return humidity;
+        }
+    
+        /**
+         * @return Electric air conditioner compressor power.
+         */
+        public Property<Power> getAirConditionerCompressorPower() {
+            return airConditionerCompressorPower;
+        }
+    
+        State(byte[] bytes) {
             super(bytes);
     
-            final ArrayList<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
+            final ArrayList<Property<WeekdayTime>> hvacWeekdayStartingTimesBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_INSIDE_TEMPERATURE: return insideTemperature.update(p);
                         case PROPERTY_OUTSIDE_TEMPERATURE: return outsideTemperature.update(p);
@@ -537,10 +556,12 @@ public class Climate {
                         case PROPERTY_IONISING_STATE: return ionisingState.update(p);
                         case PROPERTY_DEFROSTING_TEMPERATURE_SETTING: return defrostingTemperatureSetting.update(p);
                         case PROPERTY_HVAC_WEEKDAY_STARTING_TIMES:
-                            Property<HvacWeekdayStartingTime> hvacWeekdayStartingTime = new Property<>(HvacWeekdayStartingTime.class, p);
+                            Property<WeekdayTime> hvacWeekdayStartingTime = new Property<>(WeekdayTime.class, p);
                             hvacWeekdayStartingTimesBuilder.add(hvacWeekdayStartingTime);
                             return hvacWeekdayStartingTime;
                         case PROPERTY_REAR_TEMPERATURE_SETTING: return rearTemperatureSetting.update(p);
+                        case PROPERTY_HUMIDITY: return humidity.update(p);
+                        case PROPERTY_AIR_CONDITIONER_COMPRESSOR_POWER: return airConditionerCompressorPower.update(p);
                     }
     
                     return null;
@@ -550,41 +571,15 @@ public class Climate {
             hvacWeekdayStartingTimes = hvacWeekdayStartingTimesBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            insideTemperature = builder.insideTemperature;
-            outsideTemperature = builder.outsideTemperature;
-            driverTemperatureSetting = builder.driverTemperatureSetting;
-            passengerTemperatureSetting = builder.passengerTemperatureSetting;
-            hvacState = builder.hvacState;
-            defoggingState = builder.defoggingState;
-            defrostingState = builder.defrostingState;
-            ionisingState = builder.ionisingState;
-            defrostingTemperatureSetting = builder.defrostingTemperatureSetting;
-            hvacWeekdayStartingTimes = builder.hvacWeekdayStartingTimes;
-            rearTemperatureSetting = builder.rearTemperatureSetting;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<Temperature> insideTemperature;
-            private Property<Temperature> outsideTemperature;
-            private Property<Temperature> driverTemperatureSetting;
-            private Property<Temperature> passengerTemperatureSetting;
-            private Property<ActiveState> hvacState;
-            private Property<ActiveState> defoggingState;
-            private Property<ActiveState> defrostingState;
-            private Property<ActiveState> ionisingState;
-            private Property<Temperature> defrostingTemperatureSetting;
-            private final List<Property<HvacWeekdayStartingTime>> hvacWeekdayStartingTimes = new ArrayList<>();
-            private Property<Temperature> rearTemperatureSetting;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -592,8 +587,8 @@ public class Climate {
              * @return The builder
              */
             public Builder setInsideTemperature(Property<Temperature> insideTemperature) {
-                this.insideTemperature = insideTemperature.setIdentifier(PROPERTY_INSIDE_TEMPERATURE);
-                addProperty(this.insideTemperature);
+                Property property = insideTemperature.setIdentifier(PROPERTY_INSIDE_TEMPERATURE);
+                addProperty(property);
                 return this;
             }
             
@@ -602,8 +597,8 @@ public class Climate {
              * @return The builder
              */
             public Builder setOutsideTemperature(Property<Temperature> outsideTemperature) {
-                this.outsideTemperature = outsideTemperature.setIdentifier(PROPERTY_OUTSIDE_TEMPERATURE);
-                addProperty(this.outsideTemperature);
+                Property property = outsideTemperature.setIdentifier(PROPERTY_OUTSIDE_TEMPERATURE);
+                addProperty(property);
                 return this;
             }
             
@@ -612,8 +607,8 @@ public class Climate {
              * @return The builder
              */
             public Builder setDriverTemperatureSetting(Property<Temperature> driverTemperatureSetting) {
-                this.driverTemperatureSetting = driverTemperatureSetting.setIdentifier(PROPERTY_DRIVER_TEMPERATURE_SETTING);
-                addProperty(this.driverTemperatureSetting);
+                Property property = driverTemperatureSetting.setIdentifier(PROPERTY_DRIVER_TEMPERATURE_SETTING);
+                addProperty(property);
                 return this;
             }
             
@@ -622,8 +617,8 @@ public class Climate {
              * @return The builder
              */
             public Builder setPassengerTemperatureSetting(Property<Temperature> passengerTemperatureSetting) {
-                this.passengerTemperatureSetting = passengerTemperatureSetting.setIdentifier(PROPERTY_PASSENGER_TEMPERATURE_SETTING);
-                addProperty(this.passengerTemperatureSetting);
+                Property property = passengerTemperatureSetting.setIdentifier(PROPERTY_PASSENGER_TEMPERATURE_SETTING);
+                addProperty(property);
                 return this;
             }
             
@@ -632,8 +627,8 @@ public class Climate {
              * @return The builder
              */
             public Builder setHvacState(Property<ActiveState> hvacState) {
-                this.hvacState = hvacState.setIdentifier(PROPERTY_HVAC_STATE);
-                addProperty(this.hvacState);
+                Property property = hvacState.setIdentifier(PROPERTY_HVAC_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -642,8 +637,8 @@ public class Climate {
              * @return The builder
              */
             public Builder setDefoggingState(Property<ActiveState> defoggingState) {
-                this.defoggingState = defoggingState.setIdentifier(PROPERTY_DEFOGGING_STATE);
-                addProperty(this.defoggingState);
+                Property property = defoggingState.setIdentifier(PROPERTY_DEFOGGING_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -652,8 +647,8 @@ public class Climate {
              * @return The builder
              */
             public Builder setDefrostingState(Property<ActiveState> defrostingState) {
-                this.defrostingState = defrostingState.setIdentifier(PROPERTY_DEFROSTING_STATE);
-                addProperty(this.defrostingState);
+                Property property = defrostingState.setIdentifier(PROPERTY_DEFROSTING_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -662,8 +657,8 @@ public class Climate {
              * @return The builder
              */
             public Builder setIonisingState(Property<ActiveState> ionisingState) {
-                this.ionisingState = ionisingState.setIdentifier(PROPERTY_IONISING_STATE);
-                addProperty(this.ionisingState);
+                Property property = ionisingState.setIdentifier(PROPERTY_IONISING_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -672,8 +667,8 @@ public class Climate {
              * @return The builder
              */
             public Builder setDefrostingTemperatureSetting(Property<Temperature> defrostingTemperatureSetting) {
-                this.defrostingTemperatureSetting = defrostingTemperatureSetting.setIdentifier(PROPERTY_DEFROSTING_TEMPERATURE_SETTING);
-                addProperty(this.defrostingTemperatureSetting);
+                Property property = defrostingTemperatureSetting.setIdentifier(PROPERTY_DEFROSTING_TEMPERATURE_SETTING);
+                addProperty(property);
                 return this;
             }
             
@@ -683,8 +678,7 @@ public class Climate {
              * @param hvacWeekdayStartingTimes The hvac weekday starting times
              * @return The builder
              */
-            public Builder setHvacWeekdayStartingTimes(Property<HvacWeekdayStartingTime>[] hvacWeekdayStartingTimes) {
-                this.hvacWeekdayStartingTimes.clear();
+            public Builder setHvacWeekdayStartingTimes(Property<WeekdayTime>[] hvacWeekdayStartingTimes) {
                 for (int i = 0; i < hvacWeekdayStartingTimes.length; i++) {
                     addHvacWeekdayStartingTime(hvacWeekdayStartingTimes[i]);
                 }
@@ -698,10 +692,9 @@ public class Climate {
              * @param hvacWeekdayStartingTime The hvac weekday starting time
              * @return The builder
              */
-            public Builder addHvacWeekdayStartingTime(Property<HvacWeekdayStartingTime> hvacWeekdayStartingTime) {
+            public Builder addHvacWeekdayStartingTime(Property<WeekdayTime> hvacWeekdayStartingTime) {
                 hvacWeekdayStartingTime.setIdentifier(PROPERTY_HVAC_WEEKDAY_STARTING_TIMES);
                 addProperty(hvacWeekdayStartingTime);
-                hvacWeekdayStartingTimes.add(hvacWeekdayStartingTime);
                 return this;
             }
             
@@ -710,8 +703,28 @@ public class Climate {
              * @return The builder
              */
             public Builder setRearTemperatureSetting(Property<Temperature> rearTemperatureSetting) {
-                this.rearTemperatureSetting = rearTemperatureSetting.setIdentifier(PROPERTY_REAR_TEMPERATURE_SETTING);
-                addProperty(this.rearTemperatureSetting);
+                Property property = rearTemperatureSetting.setIdentifier(PROPERTY_REAR_TEMPERATURE_SETTING);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param humidity Measured relative humidity between 0.0 - 1.0.
+             * @return The builder
+             */
+            public Builder setHumidity(Property<Double> humidity) {
+                Property property = humidity.setIdentifier(PROPERTY_HUMIDITY);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param airConditionerCompressorPower Electric air conditioner compressor power.
+             * @return The builder
+             */
+            public Builder setAirConditionerCompressorPower(Property<Power> airConditionerCompressorPower) {
+                Property property = airConditionerCompressorPower.setIdentifier(PROPERTY_AIR_CONDITIONER_COMPRESSOR_POWER);
+                addProperty(property);
                 return this;
             }
         }

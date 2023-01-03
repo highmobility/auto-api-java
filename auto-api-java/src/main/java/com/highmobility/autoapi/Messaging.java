@@ -70,10 +70,10 @@ public class Messaging {
             createBytes();
         }
     
-        MessageReceived(byte[] bytes) throws CommandParseException, PropertyParseException {
+        MessageReceived(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_TEXT: return text.update(p);
                         case PROPERTY_HANDLE: return handle.update(p);
@@ -109,10 +109,10 @@ public class Messaging {
             return handle;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_TEXT: return text.update(p);
                         case PROPERTY_HANDLE: return handle.update(p);
@@ -123,23 +123,15 @@ public class Messaging {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            text = builder.text;
-            handle = builder.handle;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<String> text;
-            private Property<String> handle;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -147,8 +139,8 @@ public class Messaging {
              * @return The builder
              */
             public Builder setText(Property<String> text) {
-                this.text = text.setIdentifier(PROPERTY_TEXT);
-                addProperty(this.text);
+                Property property = text.setIdentifier(PROPERTY_TEXT);
+                addProperty(property);
                 return this;
             }
             
@@ -157,8 +149,8 @@ public class Messaging {
              * @return The builder
              */
             public Builder setHandle(Property<String> handle) {
-                this.handle = handle.setIdentifier(PROPERTY_HANDLE);
-                addProperty(this.handle);
+                Property property = handle.setIdentifier(PROPERTY_HANDLE);
+                addProperty(property);
                 return this;
             }
         }

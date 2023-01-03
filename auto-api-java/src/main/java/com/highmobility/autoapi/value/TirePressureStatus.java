@@ -84,7 +84,9 @@ public class TirePressureStatus extends PropertyValueObject {
     public enum Status implements ByteEnum {
         NORMAL((byte) 0x00),
         LOW((byte) 0x01),
-        ALERT((byte) 0x02);
+        ALERT((byte) 0x02),
+        SOFT((byte) 0x03),
+        DEFLATION((byte) 0x04);
     
         public static Status fromByte(byte byteValue) throws CommandParseException {
             Status[] values = Status.values();

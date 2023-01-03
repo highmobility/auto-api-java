@@ -188,14 +188,14 @@ public class Windows {
             createBytes();
         }
     
-        ControlWindows(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ControlWindows(byte[] bytes) throws PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<WindowOpenPercentage>> openPercentagesBuilder = new ArrayList<>();
             final ArrayList<Property<WindowPosition>> positionsBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_OPEN_PERCENTAGES: {
                             Property<WindowOpenPercentage> openPercentage = new Property<>(WindowOpenPercentage.class, p);
@@ -266,14 +266,14 @@ public class Windows {
             return null;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<WindowOpenPercentage>> openPercentagesBuilder = new ArrayList<>();
             final ArrayList<Property<WindowPosition>> positionsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_OPEN_PERCENTAGES:
                             Property<WindowOpenPercentage> openPercentage = new Property<>(WindowOpenPercentage.class, p);
@@ -293,23 +293,15 @@ public class Windows {
             positions = positionsBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            openPercentages = builder.openPercentages;
-            positions = builder.positions;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private final List<Property<WindowOpenPercentage>> openPercentages = new ArrayList<>();
-            private final List<Property<WindowPosition>> positions = new ArrayList<>();
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -319,7 +311,6 @@ public class Windows {
              * @return The builder
              */
             public Builder setOpenPercentages(Property<WindowOpenPercentage>[] openPercentages) {
-                this.openPercentages.clear();
                 for (int i = 0; i < openPercentages.length; i++) {
                     addOpenPercentage(openPercentages[i]);
                 }
@@ -336,7 +327,6 @@ public class Windows {
             public Builder addOpenPercentage(Property<WindowOpenPercentage> openPercentage) {
                 openPercentage.setIdentifier(PROPERTY_OPEN_PERCENTAGES);
                 addProperty(openPercentage);
-                openPercentages.add(openPercentage);
                 return this;
             }
             
@@ -347,7 +337,6 @@ public class Windows {
              * @return The builder
              */
             public Builder setPositions(Property<WindowPosition>[] positions) {
-                this.positions.clear();
                 for (int i = 0; i < positions.length; i++) {
                     addPosition(positions[i]);
                 }
@@ -363,7 +352,6 @@ public class Windows {
             public Builder addPosition(Property<WindowPosition> position) {
                 position.setIdentifier(PROPERTY_POSITIONS);
                 addProperty(position);
-                positions.add(position);
                 return this;
             }
         }

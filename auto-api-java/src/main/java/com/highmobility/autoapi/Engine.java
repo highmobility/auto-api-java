@@ -23,11 +23,15 @@
  */
 package com.highmobility.autoapi;
 
+import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.EnabledState;
 import com.highmobility.autoapi.value.OnOffState;
+import com.highmobility.autoapi.value.measurement.Duration;
 import com.highmobility.value.Bytes;
+
+import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 /**
  * The Engine capability
@@ -38,6 +42,12 @@ public class Engine {
     public static final byte PROPERTY_STATUS = 0x01;
     public static final byte PROPERTY_START_STOP_STATE = 0x02;
     public static final byte PROPERTY_START_STOP_ENABLED = 0x03;
+    public static final byte PROPERTY_PRECONDITIONING_ENABLED = 0x04;
+    public static final byte PROPERTY_PRECONDITIONING_ACTIVE = 0x05;
+    public static final byte PROPERTY_PRECONDITIONING_REMAINING_TIME = 0x06;
+    public static final byte PROPERTY_PRECONDITIONING_ERROR = 0x07;
+    public static final byte PROPERTY_PRECONDITIONING_STATUS = 0x08;
+    public static final byte PROPERTY_LIMP_MODE = 0x09;
 
     /**
      * Get Engine property availability information
@@ -158,10 +168,10 @@ public class Engine {
             createBytes();
         }
     
-        TurnEngineOnOff(byte[] bytes) throws CommandParseException, PropertyParseException {
+        TurnEngineOnOff(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     
                     return null;
@@ -198,10 +208,10 @@ public class Engine {
             createBytes();
         }
     
-        EnableDisableStartStop(byte[] bytes) throws CommandParseException, PropertyParseException {
+        EnableDisableStartStop(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_START_STOP_ENABLED) return startStopEnabled.update(p);
                     
                     return null;
@@ -220,6 +230,12 @@ public class Engine {
         Property<OnOffState> status = new Property<>(OnOffState.class, PROPERTY_STATUS);
         Property<ActiveState> startStopState = new Property<>(ActiveState.class, PROPERTY_START_STOP_STATE);
         Property<EnabledState> startStopEnabled = new Property<>(EnabledState.class, PROPERTY_START_STOP_ENABLED);
+        Property<EnabledState> preconditioningEnabled = new Property<>(EnabledState.class, PROPERTY_PRECONDITIONING_ENABLED);
+        Property<ActiveState> preconditioningActive = new Property<>(ActiveState.class, PROPERTY_PRECONDITIONING_ACTIVE);
+        Property<Duration> preconditioningRemainingTime = new Property<>(Duration.class, PROPERTY_PRECONDITIONING_REMAINING_TIME);
+        Property<PreconditioningError> preconditioningError = new Property<>(PreconditioningError.class, PROPERTY_PRECONDITIONING_ERROR);
+        Property<PreconditioningStatus> preconditioningStatus = new Property<>(PreconditioningStatus.class, PROPERTY_PRECONDITIONING_STATUS);
+        Property<ActiveState> limpMode = new Property<>(ActiveState.class, PROPERTY_LIMP_MODE);
     
         /**
          * @return The status
@@ -242,14 +258,62 @@ public class Engine {
             return startStopEnabled;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        /**
+         * @return Use of the engine pre-conditioning is enabled.
+         */
+        public Property<EnabledState> getPreconditioningEnabled() {
+            return preconditioningEnabled;
+        }
+    
+        /**
+         * @return Pre-conditioning is running.
+         */
+        public Property<ActiveState> getPreconditioningActive() {
+            return preconditioningActive;
+        }
+    
+        /**
+         * @return Remaining time of pre-conditioning.
+         */
+        public Property<Duration> getPreconditioningRemainingTime() {
+            return preconditioningRemainingTime;
+        }
+    
+        /**
+         * @return Reason for not carrying out pre-conditioning.
+         */
+        public Property<PreconditioningError> getPreconditioningError() {
+            return preconditioningError;
+        }
+    
+        /**
+         * @return Status of the pre-conditioning system.
+         */
+        public Property<PreconditioningStatus> getPreconditioningStatus() {
+            return preconditioningStatus;
+        }
+    
+        /**
+         * @return Indicates wheter the engine is in fail-safe mode.
+         */
+        public Property<ActiveState> getLimpMode() {
+            return limpMode;
+        }
+    
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
                         case PROPERTY_START_STOP_STATE: return startStopState.update(p);
                         case PROPERTY_START_STOP_ENABLED: return startStopEnabled.update(p);
+                        case PROPERTY_PRECONDITIONING_ENABLED: return preconditioningEnabled.update(p);
+                        case PROPERTY_PRECONDITIONING_ACTIVE: return preconditioningActive.update(p);
+                        case PROPERTY_PRECONDITIONING_REMAINING_TIME: return preconditioningRemainingTime.update(p);
+                        case PROPERTY_PRECONDITIONING_ERROR: return preconditioningError.update(p);
+                        case PROPERTY_PRECONDITIONING_STATUS: return preconditioningStatus.update(p);
+                        case PROPERTY_LIMP_MODE: return limpMode.update(p);
                     }
     
                     return null;
@@ -257,25 +321,15 @@ public class Engine {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            status = builder.status;
-            startStopState = builder.startStopState;
-            startStopEnabled = builder.startStopEnabled;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<OnOffState> status;
-            private Property<ActiveState> startStopState;
-            private Property<EnabledState> startStopEnabled;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -283,8 +337,8 @@ public class Engine {
              * @return The builder
              */
             public Builder setStatus(Property<OnOffState> status) {
-                this.status = status.setIdentifier(PROPERTY_STATUS);
-                addProperty(this.status);
+                Property property = status.setIdentifier(PROPERTY_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -293,8 +347,8 @@ public class Engine {
              * @return The builder
              */
             public Builder setStartStopState(Property<ActiveState> startStopState) {
-                this.startStopState = startStopState.setIdentifier(PROPERTY_START_STOP_STATE);
-                addProperty(this.startStopState);
+                Property property = startStopState.setIdentifier(PROPERTY_START_STOP_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -303,10 +357,138 @@ public class Engine {
              * @return The builder
              */
             public Builder setStartStopEnabled(Property<EnabledState> startStopEnabled) {
-                this.startStopEnabled = startStopEnabled.setIdentifier(PROPERTY_START_STOP_ENABLED);
-                addProperty(this.startStopEnabled);
+                Property property = startStopEnabled.setIdentifier(PROPERTY_START_STOP_ENABLED);
+                addProperty(property);
                 return this;
             }
+            
+            /**
+             * @param preconditioningEnabled Use of the engine pre-conditioning is enabled.
+             * @return The builder
+             */
+            public Builder setPreconditioningEnabled(Property<EnabledState> preconditioningEnabled) {
+                Property property = preconditioningEnabled.setIdentifier(PROPERTY_PRECONDITIONING_ENABLED);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param preconditioningActive Pre-conditioning is running.
+             * @return The builder
+             */
+            public Builder setPreconditioningActive(Property<ActiveState> preconditioningActive) {
+                Property property = preconditioningActive.setIdentifier(PROPERTY_PRECONDITIONING_ACTIVE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param preconditioningRemainingTime Remaining time of pre-conditioning.
+             * @return The builder
+             */
+            public Builder setPreconditioningRemainingTime(Property<Duration> preconditioningRemainingTime) {
+                Property property = preconditioningRemainingTime.setIdentifier(PROPERTY_PRECONDITIONING_REMAINING_TIME);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param preconditioningError Reason for not carrying out pre-conditioning.
+             * @return The builder
+             */
+            public Builder setPreconditioningError(Property<PreconditioningError> preconditioningError) {
+                Property property = preconditioningError.setIdentifier(PROPERTY_PRECONDITIONING_ERROR);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param preconditioningStatus Status of the pre-conditioning system.
+             * @return The builder
+             */
+            public Builder setPreconditioningStatus(Property<PreconditioningStatus> preconditioningStatus) {
+                Property property = preconditioningStatus.setIdentifier(PROPERTY_PRECONDITIONING_STATUS);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param limpMode Indicates wheter the engine is in fail-safe mode.
+             * @return The builder
+             */
+            public Builder setLimpMode(Property<ActiveState> limpMode) {
+                Property property = limpMode.setIdentifier(PROPERTY_LIMP_MODE);
+                addProperty(property);
+                return this;
+            }
+        }
+    }
+
+    public enum PreconditioningError implements ByteEnum {
+        LOW_FUEL((byte) 0x00),
+        LOW_BATTERY((byte) 0x01),
+        QUOTA_EXCEEDED((byte) 0x02),
+        HEATER_FAILURE((byte) 0x03),
+        COMPONENT_FAILURE((byte) 0x04),
+        OPEN_OR_UNLOCKED((byte) 0x05),
+        OK((byte) 0x06);
+    
+        public static PreconditioningError fromByte(byte byteValue) throws CommandParseException {
+            PreconditioningError[] values = PreconditioningError.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                PreconditioningError state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(PreconditioningError.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        PreconditioningError(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum PreconditioningStatus implements ByteEnum {
+        STANDBY((byte) 0x00),
+        HEATING((byte) 0x01),
+        COOLING((byte) 0x02),
+        VENTILATION((byte) 0x03),
+        INACTIVE((byte) 0x04);
+    
+        public static PreconditioningStatus fromByte(byte byteValue) throws CommandParseException {
+            PreconditioningStatus[] values = PreconditioningStatus.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                PreconditioningStatus state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(PreconditioningStatus.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        PreconditioningStatus(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
         }
     }
 }

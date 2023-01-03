@@ -55,7 +55,8 @@ class KRaceTest : BaseTest() {
             "0f000401000101" +  // Clutch pedal switch is active, clutch is fully depressed
             "10000401000101" +  // Accelerator pedal idle switch is active, pedal released
             "11000401000101" +  // Accelerator pedal kickdown switch is active, pedal fully depressed
-            "12000401000101" // Vehicle is moving
+            "12000401000101" +  // Vehicle is moving
+            "13000401000102" // Drivetrain is in `race_start` state.
     )
     
     @Test
@@ -89,11 +90,11 @@ class KRaceTest : BaseTest() {
         builder.setAcceleratorPedalIdleSwitch(Property(ActiveState.ACTIVE))
         builder.setAcceleratorPedalKickdownSwitch(Property(ActiveState.ACTIVE))
         builder.setVehicleMoving(Property(Race.VehicleMoving.MOVING))
+        builder.setDrivetrainState(Property(Race.DrivetrainState.RACE_START))
         testState(builder.build())
     }
     
     private fun testState(state: Race.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.accelerations[0].value?.direction == Acceleration.Direction.LONGITUDINAL)
         assertTrue(state.accelerations[0].value?.acceleration?.value == 0.864)
         assertTrue(state.accelerations[0].value?.acceleration?.unit == AccelerationUnit.Unit.GRAVITY)
@@ -130,6 +131,8 @@ class KRaceTest : BaseTest() {
         assertTrue(state.acceleratorPedalIdleSwitch.value == ActiveState.ACTIVE)
         assertTrue(state.acceleratorPedalKickdownSwitch.value == ActiveState.ACTIVE)
         assertTrue(state.vehicleMoving.value == Race.VehicleMoving.MOVING)
+        assertTrue(state.drivetrainState.value == Race.DrivetrainState.RACE_START)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test
@@ -139,10 +142,10 @@ class KRaceTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0057000102030405060708090a0b0c0d0e0f101112")
-        val propertyGetter = Race.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0057000102030405060708090a0b0c0d0e0f10111213")
+        val propertyGetter = Race.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f10111213"))
     }
     
     @Test
@@ -165,14 +168,14 @@ class KRaceTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112")
+        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f10111213")
         val allBytes = Bytes(COMMAND_HEADER + "005702" + identifierBytes)
         val constructed = Race.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.RACE)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Race.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12)
+        val secondConstructed = Race.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

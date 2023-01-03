@@ -88,13 +88,13 @@ public class Notifications {
             createBytes();
         }
     
-        Notification(byte[] bytes) throws CommandParseException, PropertyParseException {
+        Notification(byte[] bytes) throws PropertyParseException {
             super(bytes);
         
             final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
         
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_TEXT: return text.update(p);
                         case PROPERTY_ACTION_ITEMS: {
@@ -140,10 +140,10 @@ public class Notifications {
             createBytes();
         }
     
-        Action(byte[] bytes) throws CommandParseException, PropertyParseException {
+        Action(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_ACTIVATED_ACTION) return activatedAction.update(p);
                     
                     return null;
@@ -171,10 +171,10 @@ public class Notifications {
             createBytes();
         }
     
-        ClearNotification(byte[] bytes) throws CommandParseException, PropertyParseException {
+        ClearNotification(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_CLEAR) return clear.update(p);
                     
                     return null;
@@ -223,13 +223,13 @@ public class Notifications {
             return clear;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<ActionItem>> actionItemsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_TEXT: return text.update(p);
                         case PROPERTY_ACTION_ITEMS:
@@ -247,27 +247,15 @@ public class Notifications {
             actionItems = actionItemsBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            text = builder.text;
-            actionItems = builder.actionItems;
-            activatedAction = builder.activatedAction;
-            clear = builder.clear;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<String> text;
-            private final List<Property<ActionItem>> actionItems = new ArrayList<>();
-            private PropertyInteger activatedAction;
-            private Property<Clear> clear;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -275,8 +263,8 @@ public class Notifications {
              * @return The builder
              */
             public Builder setText(Property<String> text) {
-                this.text = text.setIdentifier(PROPERTY_TEXT);
-                addProperty(this.text);
+                Property property = text.setIdentifier(PROPERTY_TEXT);
+                addProperty(property);
                 return this;
             }
             
@@ -287,7 +275,6 @@ public class Notifications {
              * @return The builder
              */
             public Builder setActionItems(Property<ActionItem>[] actionItems) {
-                this.actionItems.clear();
                 for (int i = 0; i < actionItems.length; i++) {
                     addActionItem(actionItems[i]);
                 }
@@ -304,7 +291,6 @@ public class Notifications {
             public Builder addActionItem(Property<ActionItem> actionItem) {
                 actionItem.setIdentifier(PROPERTY_ACTION_ITEMS);
                 addProperty(actionItem);
-                actionItems.add(actionItem);
                 return this;
             }
             
@@ -313,8 +299,8 @@ public class Notifications {
              * @return The builder
              */
             public Builder setActivatedAction(Property<Integer> activatedAction) {
-                this.activatedAction = new PropertyInteger(PROPERTY_ACTIVATED_ACTION, false, 1, activatedAction);
-                addProperty(this.activatedAction);
+                Property property = new PropertyInteger(PROPERTY_ACTIVATED_ACTION, false, 1, activatedAction);
+                addProperty(property);
                 return this;
             }
             
@@ -323,8 +309,8 @@ public class Notifications {
              * @return The builder
              */
             public Builder setClear(Property<Clear> clear) {
-                this.clear = clear.setIdentifier(PROPERTY_CLEAR);
-                addProperty(this.clear);
+                Property property = clear.setIdentifier(PROPERTY_CLEAR);
+                addProperty(property);
                 return this;
             }
         }

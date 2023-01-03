@@ -127,7 +127,8 @@ class KDiagnosticsTest : BaseTest() {
             "33000401000103" +  // Engile oil level is at normal
             "34000401000101" +  // Engine oil pressure is normal
             "35000D01000A0702407f500000000000" +  // 501.0 engine hours until next service
-            "36000401000100" // Low voltage battery charge level is ok
+            "36000401000100" +  // Low voltage battery charge level is ok
+            "37000401000100" // Engine oil service status is 'ok'
     )
     
     @Test
@@ -232,11 +233,11 @@ class KDiagnosticsTest : BaseTest() {
         builder.setEngineOilPressureLevel(Property(Diagnostics.EngineOilPressureLevel.NORMAL))
         builder.setEngineTimeToNextService(Property(Duration(501.0, Duration.Unit.HOURS)))
         builder.setLowVoltageBatteryChargeLevel(Property(Diagnostics.LowVoltageBatteryChargeLevel.OK))
+        builder.setEngineOilServiceStatus(Property(ServiceStatus.OK))
         testState(builder.build())
     }
     
     private fun testState(state: Diagnostics.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.mileage.value?.value == 150000.0)
         assertTrue(state.mileage.value?.unit == Length.Unit.KILOMETERS)
         assertTrue(state.engineOilTemperature.value?.value == 99.5)
@@ -461,6 +462,8 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(state.engineTimeToNextService.value?.value == 501.0)
         assertTrue(state.engineTimeToNextService.value?.unit == Duration.Unit.HOURS)
         assertTrue(state.lowVoltageBatteryChargeLevel.value == Diagnostics.LowVoltageBatteryChargeLevel.OK)
+        assertTrue(state.engineOilServiceStatus.value == ServiceStatus.OK)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test
@@ -470,10 +473,10 @@ class KDiagnosticsTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "003300010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627282a2b2c2d2e2f30313233343536")
-        val propertyGetter = Diagnostics.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "003300010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627282a2b2c2d2e2f3031323334353637")
+        val propertyGetter = Diagnostics.GetState(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627282a2b2c2d2e2f30313233343536"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627282a2b2c2d2e2f3031323334353637"))
     }
     
     @Test
@@ -496,14 +499,14 @@ class KDiagnosticsTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627282a2b2c2d2e2f30313233343536")
+        val identifierBytes = Bytes("010203040506090b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627282a2b2c2d2e2f3031323334353637")
         val allBytes = Bytes(COMMAND_HEADER + "003302" + identifierBytes)
         val constructed = Diagnostics.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.DIAGNOSTICS)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Diagnostics.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36)
+        val secondConstructed = Diagnostics.GetStateAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x09, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

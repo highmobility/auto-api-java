@@ -54,10 +54,10 @@ class KHoodTest : BaseTest() {
     }
     
     private fun testState(state: Hood.State) {
-        assertTrue(bytesTheSame(state, bytes))
         assertTrue(state.position.value == Hood.Position.OPEN)
         assertTrue(state.lock.value == LockState.LOCKED)
         assertTrue(state.lockSafety.value == LockSafety.SAFE)
+        assertTrue(bytesTheSame(state, bytes))
     }
     
     @Test

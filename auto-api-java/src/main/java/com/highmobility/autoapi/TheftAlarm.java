@@ -26,6 +26,7 @@ package com.highmobility.autoapi;
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveSelectedState;
+import com.highmobility.autoapi.value.Triggered;
 import com.highmobility.value.Bytes;
 import java.util.Calendar;
 
@@ -44,6 +45,8 @@ public class TheftAlarm {
     public static final byte PROPERTY_LAST_EVENT = 0x05;
     public static final byte PROPERTY_LAST_EVENT_LEVEL = 0x06;
     public static final byte PROPERTY_EVENT_TYPE = 0x07;
+    public static final byte PROPERTY_INTERIOR_PROTECTION_TRIGGERED = 0x08;
+    public static final byte PROPERTY_TOW_PROTECTION_TRIGGERED = 0x09;
 
     /**
      * Get Theft Alarm property availability information
@@ -164,10 +167,10 @@ public class TheftAlarm {
             createBytes();
         }
     
-        SetTheftAlarm(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SetTheftAlarm(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_STATUS) return status.update(p);
                     
                     return null;
@@ -190,6 +193,8 @@ public class TheftAlarm {
         Property<Calendar> lastEvent = new Property<>(Calendar.class, PROPERTY_LAST_EVENT);
         Property<LastEventLevel> lastEventLevel = new Property<>(LastEventLevel.class, PROPERTY_LAST_EVENT_LEVEL);
         Property<EventType> eventType = new Property<>(EventType.class, PROPERTY_EVENT_TYPE);
+        Property<Triggered> interiorProtectionTriggered = new Property<>(Triggered.class, PROPERTY_INTERIOR_PROTECTION_TRIGGERED);
+        Property<Triggered> towProtectionTriggered = new Property<>(Triggered.class, PROPERTY_TOW_PROTECTION_TRIGGERED);
     
         /**
          * @return The status
@@ -240,10 +245,24 @@ public class TheftAlarm {
             return eventType;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        /**
+         * @return Indicates whether the interior protection sensors are triggered.
+         */
+        public Property<Triggered> getInteriorProtectionTriggered() {
+            return interiorProtectionTriggered;
+        }
+    
+        /**
+         * @return Indicates whether the tow protection sensors are triggered.
+         */
+        public Property<Triggered> getTowProtectionTriggered() {
+            return towProtectionTriggered;
+        }
+    
+        State(byte[] bytes) {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
                         case PROPERTY_INTERIOR_PROTECTION_STATUS: return interiorProtectionStatus.update(p);
@@ -252,6 +271,8 @@ public class TheftAlarm {
                         case PROPERTY_LAST_EVENT: return lastEvent.update(p);
                         case PROPERTY_LAST_EVENT_LEVEL: return lastEventLevel.update(p);
                         case PROPERTY_EVENT_TYPE: return eventType.update(p);
+                        case PROPERTY_INTERIOR_PROTECTION_TRIGGERED: return interiorProtectionTriggered.update(p);
+                        case PROPERTY_TOW_PROTECTION_TRIGGERED: return towProtectionTriggered.update(p);
                     }
     
                     return null;
@@ -259,33 +280,15 @@ public class TheftAlarm {
             }
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            status = builder.status;
-            interiorProtectionStatus = builder.interiorProtectionStatus;
-            towProtectionStatus = builder.towProtectionStatus;
-            lastWarningReason = builder.lastWarningReason;
-            lastEvent = builder.lastEvent;
-            lastEventLevel = builder.lastEventLevel;
-            eventType = builder.eventType;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<Status> status;
-            private Property<ActiveSelectedState> interiorProtectionStatus;
-            private Property<ActiveSelectedState> towProtectionStatus;
-            private Property<LastWarningReason> lastWarningReason;
-            private Property<Calendar> lastEvent;
-            private Property<LastEventLevel> lastEventLevel;
-            private Property<EventType> eventType;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -293,8 +296,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setStatus(Property<Status> status) {
-                this.status = status.setIdentifier(PROPERTY_STATUS);
-                addProperty(this.status);
+                Property property = status.setIdentifier(PROPERTY_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -303,8 +306,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setInteriorProtectionStatus(Property<ActiveSelectedState> interiorProtectionStatus) {
-                this.interiorProtectionStatus = interiorProtectionStatus.setIdentifier(PROPERTY_INTERIOR_PROTECTION_STATUS);
-                addProperty(this.interiorProtectionStatus);
+                Property property = interiorProtectionStatus.setIdentifier(PROPERTY_INTERIOR_PROTECTION_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -313,8 +316,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setTowProtectionStatus(Property<ActiveSelectedState> towProtectionStatus) {
-                this.towProtectionStatus = towProtectionStatus.setIdentifier(PROPERTY_TOW_PROTECTION_STATUS);
-                addProperty(this.towProtectionStatus);
+                Property property = towProtectionStatus.setIdentifier(PROPERTY_TOW_PROTECTION_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -323,8 +326,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setLastWarningReason(Property<LastWarningReason> lastWarningReason) {
-                this.lastWarningReason = lastWarningReason.setIdentifier(PROPERTY_LAST_WARNING_REASON);
-                addProperty(this.lastWarningReason);
+                Property property = lastWarningReason.setIdentifier(PROPERTY_LAST_WARNING_REASON);
+                addProperty(property);
                 return this;
             }
             
@@ -333,8 +336,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setLastEvent(Property<Calendar> lastEvent) {
-                this.lastEvent = lastEvent.setIdentifier(PROPERTY_LAST_EVENT);
-                addProperty(this.lastEvent);
+                Property property = lastEvent.setIdentifier(PROPERTY_LAST_EVENT);
+                addProperty(property);
                 return this;
             }
             
@@ -343,8 +346,8 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setLastEventLevel(Property<LastEventLevel> lastEventLevel) {
-                this.lastEventLevel = lastEventLevel.setIdentifier(PROPERTY_LAST_EVENT_LEVEL);
-                addProperty(this.lastEventLevel);
+                Property property = lastEventLevel.setIdentifier(PROPERTY_LAST_EVENT_LEVEL);
+                addProperty(property);
                 return this;
             }
             
@@ -353,8 +356,28 @@ public class TheftAlarm {
              * @return The builder
              */
             public Builder setEventType(Property<EventType> eventType) {
-                this.eventType = eventType.setIdentifier(PROPERTY_EVENT_TYPE);
-                addProperty(this.eventType);
+                Property property = eventType.setIdentifier(PROPERTY_EVENT_TYPE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param interiorProtectionTriggered Indicates whether the interior protection sensors are triggered.
+             * @return The builder
+             */
+            public Builder setInteriorProtectionTriggered(Property<Triggered> interiorProtectionTriggered) {
+                Property property = interiorProtectionTriggered.setIdentifier(PROPERTY_INTERIOR_PROTECTION_TRIGGERED);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param towProtectionTriggered Indicates whether the tow protection sensors are triggered.
+             * @return The builder
+             */
+            public Builder setTowProtectionTriggered(Property<Triggered> towProtectionTriggered) {
+                Property property = towProtectionTriggered.setIdentifier(PROPERTY_TOW_PROTECTION_TRIGGERED);
+                addProperty(property);
                 return this;
             }
         }
@@ -393,7 +416,7 @@ public class TheftAlarm {
 
     public enum LastWarningReason implements ByteEnum {
         NO_ALARM((byte) 0x00),
-        BASIS_ALARM((byte) 0x01),
+        BASIC_ALARM((byte) 0x01),
         DOOR_FRONT_LEFT((byte) 0x02),
         DOOR_FRONT_RIGHT((byte) 0x03),
         DOOR_REAR_LEFT((byte) 0x04),
@@ -412,7 +435,8 @@ public class TheftAlarm {
         HORN((byte) 0x11),
         HOLD_COM((byte) 0x12),
         REMOTE((byte) 0x13),
-        UNKNOWN((byte) 0x14);
+        UNKNOWN((byte) 0x14),
+        SIREN((byte) 0x15);
     
         public static LastWarningReason fromByte(byte byteValue) throws CommandParseException {
             LastWarningReason[] values = LastWarningReason.values();

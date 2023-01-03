@@ -173,14 +173,14 @@ public class ChargingSession {
             return location;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<ChargingPoint>> publicChargingPointsBuilder = new ArrayList<>();
             final ArrayList<Property<String>> businessErrorsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_PUBLIC_CHARGING_POINTS:
                             Property<ChargingPoint> publicChargingPoint = new Property<>(ChargingPoint.class, p);
@@ -212,47 +212,15 @@ public class ChargingSession {
             businessErrors = businessErrorsBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            publicChargingPoints = builder.publicChargingPoints;
-            displayedStateOfCharge = builder.displayedStateOfCharge;
-            displayedStartStateOfCharge = builder.displayedStartStateOfCharge;
-            businessErrors = builder.businessErrors;
-            timeZone = builder.timeZone;
-            startTime = builder.startTime;
-            endTime = builder.endTime;
-            totalChargingDuration = builder.totalChargingDuration;
-            calculatedEnergyCharged = builder.calculatedEnergyCharged;
-            energyCharged = builder.energyCharged;
-            preconditioningState = builder.preconditioningState;
-            odometer = builder.odometer;
-            chargingCost = builder.chargingCost;
-            location = builder.location;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private final List<Property<ChargingPoint>> publicChargingPoints = new ArrayList<>();
-            private Property<Double> displayedStateOfCharge;
-            private Property<Double> displayedStartStateOfCharge;
-            private final List<Property<String>> businessErrors = new ArrayList<>();
-            private Property<String> timeZone;
-            private Property<Calendar> startTime;
-            private Property<Calendar> endTime;
-            private Property<Duration> totalChargingDuration;
-            private Property<Energy> calculatedEnergyCharged;
-            private Property<Energy> energyCharged;
-            private Property<ActiveState> preconditioningState;
-            private Property<Length> odometer;
-            private Property<ChargingCost> chargingCost;
-            private Property<ChargingLocation> location;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -262,7 +230,6 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setPublicChargingPoints(Property<ChargingPoint>[] publicChargingPoints) {
-                this.publicChargingPoints.clear();
                 for (int i = 0; i < publicChargingPoints.length; i++) {
                     addPublicChargingPoint(publicChargingPoints[i]);
                 }
@@ -279,7 +246,6 @@ public class ChargingSession {
             public Builder addPublicChargingPoint(Property<ChargingPoint> publicChargingPoint) {
                 publicChargingPoint.setIdentifier(PROPERTY_PUBLIC_CHARGING_POINTS);
                 addProperty(publicChargingPoint);
-                publicChargingPoints.add(publicChargingPoint);
                 return this;
             }
             
@@ -288,8 +254,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setDisplayedStateOfCharge(Property<Double> displayedStateOfCharge) {
-                this.displayedStateOfCharge = displayedStateOfCharge.setIdentifier(PROPERTY_DISPLAYED_STATE_OF_CHARGE);
-                addProperty(this.displayedStateOfCharge);
+                Property property = displayedStateOfCharge.setIdentifier(PROPERTY_DISPLAYED_STATE_OF_CHARGE);
+                addProperty(property);
                 return this;
             }
             
@@ -298,8 +264,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setDisplayedStartStateOfCharge(Property<Double> displayedStartStateOfCharge) {
-                this.displayedStartStateOfCharge = displayedStartStateOfCharge.setIdentifier(PROPERTY_DISPLAYED_START_STATE_OF_CHARGE);
-                addProperty(this.displayedStartStateOfCharge);
+                Property property = displayedStartStateOfCharge.setIdentifier(PROPERTY_DISPLAYED_START_STATE_OF_CHARGE);
+                addProperty(property);
                 return this;
             }
             
@@ -310,7 +276,6 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setBusinessErrors(Property<String>[] businessErrors) {
-                this.businessErrors.clear();
                 for (int i = 0; i < businessErrors.length; i++) {
                     addBusinessError(businessErrors[i]);
                 }
@@ -327,7 +292,6 @@ public class ChargingSession {
             public Builder addBusinessError(Property<String> businessError) {
                 businessError.setIdentifier(PROPERTY_BUSINESS_ERRORS);
                 addProperty(businessError);
-                businessErrors.add(businessError);
                 return this;
             }
             
@@ -336,8 +300,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setTimeZone(Property<String> timeZone) {
-                this.timeZone = timeZone.setIdentifier(PROPERTY_TIME_ZONE);
-                addProperty(this.timeZone);
+                Property property = timeZone.setIdentifier(PROPERTY_TIME_ZONE);
+                addProperty(property);
                 return this;
             }
             
@@ -346,8 +310,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setStartTime(Property<Calendar> startTime) {
-                this.startTime = startTime.setIdentifier(PROPERTY_START_TIME);
-                addProperty(this.startTime);
+                Property property = startTime.setIdentifier(PROPERTY_START_TIME);
+                addProperty(property);
                 return this;
             }
             
@@ -356,8 +320,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setEndTime(Property<Calendar> endTime) {
-                this.endTime = endTime.setIdentifier(PROPERTY_END_TIME);
-                addProperty(this.endTime);
+                Property property = endTime.setIdentifier(PROPERTY_END_TIME);
+                addProperty(property);
                 return this;
             }
             
@@ -366,8 +330,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setTotalChargingDuration(Property<Duration> totalChargingDuration) {
-                this.totalChargingDuration = totalChargingDuration.setIdentifier(PROPERTY_TOTAL_CHARGING_DURATION);
-                addProperty(this.totalChargingDuration);
+                Property property = totalChargingDuration.setIdentifier(PROPERTY_TOTAL_CHARGING_DURATION);
+                addProperty(property);
                 return this;
             }
             
@@ -376,8 +340,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setCalculatedEnergyCharged(Property<Energy> calculatedEnergyCharged) {
-                this.calculatedEnergyCharged = calculatedEnergyCharged.setIdentifier(PROPERTY_CALCULATED_ENERGY_CHARGED);
-                addProperty(this.calculatedEnergyCharged);
+                Property property = calculatedEnergyCharged.setIdentifier(PROPERTY_CALCULATED_ENERGY_CHARGED);
+                addProperty(property);
                 return this;
             }
             
@@ -386,8 +350,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setEnergyCharged(Property<Energy> energyCharged) {
-                this.energyCharged = energyCharged.setIdentifier(PROPERTY_ENERGY_CHARGED);
-                addProperty(this.energyCharged);
+                Property property = energyCharged.setIdentifier(PROPERTY_ENERGY_CHARGED);
+                addProperty(property);
                 return this;
             }
             
@@ -396,8 +360,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setPreconditioningState(Property<ActiveState> preconditioningState) {
-                this.preconditioningState = preconditioningState.setIdentifier(PROPERTY_PRECONDITIONING_STATE);
-                addProperty(this.preconditioningState);
+                Property property = preconditioningState.setIdentifier(PROPERTY_PRECONDITIONING_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -406,8 +370,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setOdometer(Property<Length> odometer) {
-                this.odometer = odometer.setIdentifier(PROPERTY_ODOMETER);
-                addProperty(this.odometer);
+                Property property = odometer.setIdentifier(PROPERTY_ODOMETER);
+                addProperty(property);
                 return this;
             }
             
@@ -416,8 +380,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setChargingCost(Property<ChargingCost> chargingCost) {
-                this.chargingCost = chargingCost.setIdentifier(PROPERTY_CHARGING_COST);
-                addProperty(this.chargingCost);
+                Property property = chargingCost.setIdentifier(PROPERTY_CHARGING_COST);
+                addProperty(property);
                 return this;
             }
             
@@ -426,8 +390,8 @@ public class ChargingSession {
              * @return The builder
              */
             public Builder setLocation(Property<ChargingLocation> location) {
-                this.location = location.setIdentifier(PROPERTY_LOCATION);
-                addProperty(this.location);
+                Property property = location.setIdentifier(PROPERTY_LOCATION);
+                addProperty(property);
                 return this;
             }
         }

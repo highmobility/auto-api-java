@@ -52,6 +52,7 @@ public class Adas {
     public static final byte PROPERTY_LANE_KEEP_ASSISTS_STATES = 0x09;
     public static final byte PROPERTY_PARK_ASSISTS = 0x0a;
     public static final byte PROPERTY_BLIND_SPOT_WARNING_SYSTEM = 0x0b;
+    public static final byte PROPERTY_LAUNCH_CONTROL = 0x0c;
 
     /**
      * Get ADAS property availability information
@@ -162,6 +163,7 @@ public class Adas {
         List<Property<LaneKeepAssistState>> laneKeepAssistsStates;
         List<Property<ParkAssist>> parkAssists;
         Property<OnOffState> blindSpotWarningSystem = new Property<>(OnOffState.class, PROPERTY_BLIND_SPOT_WARNING_SYSTEM);
+        Property<ActiveState> launchControl = new Property<>(ActiveState.class, PROPERTY_LAUNCH_CONTROL);
     
         /**
          * @return Indicates whether the driver assistance system is active or not.
@@ -240,14 +242,21 @@ public class Adas {
             return blindSpotWarningSystem;
         }
     
-        State(byte[] bytes) throws CommandParseException, PropertyParseException {
+        /**
+         * @return State of launch control activation.
+         */
+        public Property<ActiveState> getLaunchControl() {
+            return launchControl;
+        }
+    
+        State(byte[] bytes) {
             super(bytes);
     
             final ArrayList<Property<LaneKeepAssistState>> laneKeepAssistsStatesBuilder = new ArrayList<>();
             final ArrayList<Property<ParkAssist>> parkAssistsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextState(p -> {
                     switch (p.getPropertyIdentifier()) {
                         case PROPERTY_STATUS: return status.update(p);
                         case PROPERTY_ALERTNESS_SYSTEM_STATUS: return alertnessSystemStatus.update(p);
@@ -266,6 +275,7 @@ public class Adas {
                             parkAssistsBuilder.add(parkAssist);
                             return parkAssist;
                         case PROPERTY_BLIND_SPOT_WARNING_SYSTEM: return blindSpotWarningSystem.update(p);
+                        case PROPERTY_LAUNCH_CONTROL: return launchControl.update(p);
                     }
     
                     return null;
@@ -276,41 +286,15 @@ public class Adas {
             parkAssists = parkAssistsBuilder;
         }
     
-        private State(Builder builder) {
-            super(builder);
-    
-            status = builder.status;
-            alertnessSystemStatus = builder.alertnessSystemStatus;
-            forwardCollisionWarningSystem = builder.forwardCollisionWarningSystem;
-            blindSpotWarningState = builder.blindSpotWarningState;
-            blindSpotWarningSystemCoverage = builder.blindSpotWarningSystemCoverage;
-            rearCrossWarningSystem = builder.rearCrossWarningSystem;
-            automatedParkingBrake = builder.automatedParkingBrake;
-            laneKeepAssistSystem = builder.laneKeepAssistSystem;
-            laneKeepAssistsStates = builder.laneKeepAssistsStates;
-            parkAssists = builder.parkAssists;
-            blindSpotWarningSystem = builder.blindSpotWarningSystem;
-        }
-    
-        public static final class Builder extends SetCommand.Builder {
-            private Property<OnOffState> status;
-            private Property<ActiveState> alertnessSystemStatus;
-            private Property<ActiveState> forwardCollisionWarningSystem;
-            private Property<ActiveState> blindSpotWarningState;
-            private Property<BlindSpotWarningSystemCoverage> blindSpotWarningSystemCoverage;
-            private Property<ActiveState> rearCrossWarningSystem;
-            private Property<ActiveState> automatedParkingBrake;
-            private Property<OnOffState> laneKeepAssistSystem;
-            private final List<Property<LaneKeepAssistState>> laneKeepAssistsStates = new ArrayList<>();
-            private final List<Property<ParkAssist>> parkAssists = new ArrayList<>();
-            private Property<OnOffState> blindSpotWarningSystem;
-    
+        public static final class Builder extends SetCommand.Builder<Builder> {
             public Builder() {
                 super(IDENTIFIER);
             }
     
             public State build() {
-                return new State(this);
+                SetCommand baseSetCommand = super.build();
+                Command resolved = CommandResolver.resolve(baseSetCommand.getByteArray());
+                return (State) resolved;
             }
     
             /**
@@ -318,8 +302,8 @@ public class Adas {
              * @return The builder
              */
             public Builder setStatus(Property<OnOffState> status) {
-                this.status = status.setIdentifier(PROPERTY_STATUS);
-                addProperty(this.status);
+                Property property = status.setIdentifier(PROPERTY_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -328,8 +312,8 @@ public class Adas {
              * @return The builder
              */
             public Builder setAlertnessSystemStatus(Property<ActiveState> alertnessSystemStatus) {
-                this.alertnessSystemStatus = alertnessSystemStatus.setIdentifier(PROPERTY_ALERTNESS_SYSTEM_STATUS);
-                addProperty(this.alertnessSystemStatus);
+                Property property = alertnessSystemStatus.setIdentifier(PROPERTY_ALERTNESS_SYSTEM_STATUS);
+                addProperty(property);
                 return this;
             }
             
@@ -338,8 +322,8 @@ public class Adas {
              * @return The builder
              */
             public Builder setForwardCollisionWarningSystem(Property<ActiveState> forwardCollisionWarningSystem) {
-                this.forwardCollisionWarningSystem = forwardCollisionWarningSystem.setIdentifier(PROPERTY_FORWARD_COLLISION_WARNING_SYSTEM);
-                addProperty(this.forwardCollisionWarningSystem);
+                Property property = forwardCollisionWarningSystem.setIdentifier(PROPERTY_FORWARD_COLLISION_WARNING_SYSTEM);
+                addProperty(property);
                 return this;
             }
             
@@ -348,8 +332,8 @@ public class Adas {
              * @return The builder
              */
             public Builder setBlindSpotWarningState(Property<ActiveState> blindSpotWarningState) {
-                this.blindSpotWarningState = blindSpotWarningState.setIdentifier(PROPERTY_BLIND_SPOT_WARNING_STATE);
-                addProperty(this.blindSpotWarningState);
+                Property property = blindSpotWarningState.setIdentifier(PROPERTY_BLIND_SPOT_WARNING_STATE);
+                addProperty(property);
                 return this;
             }
             
@@ -358,8 +342,8 @@ public class Adas {
              * @return The builder
              */
             public Builder setBlindSpotWarningSystemCoverage(Property<BlindSpotWarningSystemCoverage> blindSpotWarningSystemCoverage) {
-                this.blindSpotWarningSystemCoverage = blindSpotWarningSystemCoverage.setIdentifier(PROPERTY_BLIND_SPOT_WARNING_SYSTEM_COVERAGE);
-                addProperty(this.blindSpotWarningSystemCoverage);
+                Property property = blindSpotWarningSystemCoverage.setIdentifier(PROPERTY_BLIND_SPOT_WARNING_SYSTEM_COVERAGE);
+                addProperty(property);
                 return this;
             }
             
@@ -368,8 +352,8 @@ public class Adas {
              * @return The builder
              */
             public Builder setRearCrossWarningSystem(Property<ActiveState> rearCrossWarningSystem) {
-                this.rearCrossWarningSystem = rearCrossWarningSystem.setIdentifier(PROPERTY_REAR_CROSS_WARNING_SYSTEM);
-                addProperty(this.rearCrossWarningSystem);
+                Property property = rearCrossWarningSystem.setIdentifier(PROPERTY_REAR_CROSS_WARNING_SYSTEM);
+                addProperty(property);
                 return this;
             }
             
@@ -378,8 +362,8 @@ public class Adas {
              * @return The builder
              */
             public Builder setAutomatedParkingBrake(Property<ActiveState> automatedParkingBrake) {
-                this.automatedParkingBrake = automatedParkingBrake.setIdentifier(PROPERTY_AUTOMATED_PARKING_BRAKE);
-                addProperty(this.automatedParkingBrake);
+                Property property = automatedParkingBrake.setIdentifier(PROPERTY_AUTOMATED_PARKING_BRAKE);
+                addProperty(property);
                 return this;
             }
             
@@ -388,8 +372,8 @@ public class Adas {
              * @return The builder
              */
             public Builder setLaneKeepAssistSystem(Property<OnOffState> laneKeepAssistSystem) {
-                this.laneKeepAssistSystem = laneKeepAssistSystem.setIdentifier(PROPERTY_LANE_KEEP_ASSIST_SYSTEM);
-                addProperty(this.laneKeepAssistSystem);
+                Property property = laneKeepAssistSystem.setIdentifier(PROPERTY_LANE_KEEP_ASSIST_SYSTEM);
+                addProperty(property);
                 return this;
             }
             
@@ -400,7 +384,6 @@ public class Adas {
              * @return The builder
              */
             public Builder setLaneKeepAssistsStates(Property<LaneKeepAssistState>[] laneKeepAssistsStates) {
-                this.laneKeepAssistsStates.clear();
                 for (int i = 0; i < laneKeepAssistsStates.length; i++) {
                     addLaneKeepAssistsState(laneKeepAssistsStates[i]);
                 }
@@ -417,7 +400,6 @@ public class Adas {
             public Builder addLaneKeepAssistsState(Property<LaneKeepAssistState> laneKeepAssistsState) {
                 laneKeepAssistsState.setIdentifier(PROPERTY_LANE_KEEP_ASSISTS_STATES);
                 addProperty(laneKeepAssistsState);
-                laneKeepAssistsStates.add(laneKeepAssistsState);
                 return this;
             }
             
@@ -428,7 +410,6 @@ public class Adas {
              * @return The builder
              */
             public Builder setParkAssists(Property<ParkAssist>[] parkAssists) {
-                this.parkAssists.clear();
                 for (int i = 0; i < parkAssists.length; i++) {
                     addParkAssist(parkAssists[i]);
                 }
@@ -445,7 +426,6 @@ public class Adas {
             public Builder addParkAssist(Property<ParkAssist> parkAssist) {
                 parkAssist.setIdentifier(PROPERTY_PARK_ASSISTS);
                 addProperty(parkAssist);
-                parkAssists.add(parkAssist);
                 return this;
             }
             
@@ -454,8 +434,18 @@ public class Adas {
              * @return The builder
              */
             public Builder setBlindSpotWarningSystem(Property<OnOffState> blindSpotWarningSystem) {
-                this.blindSpotWarningSystem = blindSpotWarningSystem.setIdentifier(PROPERTY_BLIND_SPOT_WARNING_SYSTEM);
-                addProperty(this.blindSpotWarningSystem);
+                Property property = blindSpotWarningSystem.setIdentifier(PROPERTY_BLIND_SPOT_WARNING_SYSTEM);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param launchControl State of launch control activation.
+             * @return The builder
+             */
+            public Builder setLaunchControl(Property<ActiveState> launchControl) {
+                Property property = launchControl.setIdentifier(PROPERTY_LAUNCH_CONTROL);
+                addProperty(property);
                 return this;
             }
         }

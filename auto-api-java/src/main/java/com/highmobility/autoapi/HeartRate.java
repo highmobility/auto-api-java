@@ -62,10 +62,10 @@ public class HeartRate {
             createBytes();
         }
     
-        SendHeartRate(byte[] bytes) throws CommandParseException, PropertyParseException {
+        SendHeartRate(byte[] bytes) throws PropertyParseException {
             super(bytes);
             while (propertyIterator.hasNext()) {
-                propertyIterator.parseNext(p -> {
+                propertyIterator.parseNextSetter(p -> {
                     if (p.getPropertyIdentifier() == PROPERTY_HEART_RATE) return heartRate.update(p);
                     
                     return null;
