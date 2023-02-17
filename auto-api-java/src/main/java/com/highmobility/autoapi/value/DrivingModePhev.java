@@ -29,33 +29,32 @@ import com.highmobility.autoapi.property.ByteEnum;
 import static com.highmobility.autoapi.property.ByteEnum.enumValueDoesNotExist;
 
 
-public enum SeatLocation implements ByteEnum {
-    FRONT_LEFT((byte) 0x00),
-    FRONT_RIGHT((byte) 0x01),
-    REAR_RIGHT((byte) 0x02),
-    REAR_LEFT((byte) 0x03),
-    REAR_CENTER((byte) 0x04),
-    DRIVER((byte) 0x05),
-    PASSENGER((byte) 0x06);
+public enum DrivingModePhev implements ByteEnum {
+    NOT_IN_TRACTION((byte) 0x00),
+    IN_CHARGE((byte) 0x01),
+    FULL_ELECTRIC((byte) 0x02),
+    HYBRID_SERIAL((byte) 0x03),
+    THERMIC((byte) 0x04),
+    HYBRID_PARALLEL((byte) 0x05);
 
-    public static SeatLocation fromByte(byte byteValue) throws CommandParseException {
-        SeatLocation[] values = SeatLocation.values();
+    public static DrivingModePhev fromByte(byte byteValue) throws CommandParseException {
+        DrivingModePhev[] values = DrivingModePhev.values();
 
         for (int i = 0; i < values.length; i++) {
-            SeatLocation state = values[i];
+            DrivingModePhev state = values[i];
             if (state.getByte() == byteValue) {
                 return state;
             }
         }
 
         throw new CommandParseException(
-            enumValueDoesNotExist(SeatLocation.class.getSimpleName(), byteValue)
+            enumValueDoesNotExist(DrivingModePhev.class.getSimpleName(), byteValue)
         );
     }
 
     private final byte value;
 
-    SeatLocation(byte value) {
+    DrivingModePhev(byte value) {
         this.value = value;
     }
 

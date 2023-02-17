@@ -24,6 +24,7 @@
 package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.value.AccelerationDuration;
 import com.highmobility.autoapi.value.DistanceOverTime;
 import com.highmobility.autoapi.value.DrivingMode;
 import com.highmobility.autoapi.value.DrivingModeActivationPeriod;
@@ -94,6 +95,7 @@ public class Usage {
     public static final byte PROPERTY_BRAKING_EVALUATION = 0x2a;
     public static final byte PROPERTY_AVERAGE_SPEED = 0x2b;
     public static final byte PROPERTY_RECUPERATION_POWER = 0x2c;
+    public static final byte PROPERTY_ACCELERATION_DURATIONS = 0x2d;
 
     /**
      * Get Usage property availability information
@@ -237,6 +239,7 @@ public class Usage {
         Property<Double> brakingEvaluation = new Property<>(Double.class, PROPERTY_BRAKING_EVALUATION);
         Property<Speed> averageSpeed = new Property<>(Speed.class, PROPERTY_AVERAGE_SPEED);
         Property<Power> recuperationPower = new Property<>(Power.class, PROPERTY_RECUPERATION_POWER);
+        List<Property<AccelerationDuration>> accelerationDurations;
     
         /**
          * @return Average weekly distance
@@ -549,6 +552,13 @@ public class Usage {
         }
     
         /**
+         * @return Durations of normal or other accelerations.
+         */
+        public List<Property<AccelerationDuration>> getAccelerationDurations() {
+            return accelerationDurations;
+        }
+    
+        /**
          * @param mode The driving mode.
          * @return The driving mode activation period for given mode.
          */
@@ -582,6 +592,7 @@ public class Usage {
             final ArrayList<Property<DrivingModeActivationPeriod>> drivingModesActivationPeriodsBuilder = new ArrayList<>();
             final ArrayList<Property<DrivingModeEnergyConsumption>> drivingModesEnergyConsumptionsBuilder = new ArrayList<>();
             final ArrayList<Property<TripMeter>> tripMetersBuilder = new ArrayList<>();
+            final ArrayList<Property<AccelerationDuration>> accelerationDurationsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNextState(p -> {
@@ -639,6 +650,10 @@ public class Usage {
                         case PROPERTY_BRAKING_EVALUATION: return brakingEvaluation.update(p);
                         case PROPERTY_AVERAGE_SPEED: return averageSpeed.update(p);
                         case PROPERTY_RECUPERATION_POWER: return recuperationPower.update(p);
+                        case PROPERTY_ACCELERATION_DURATIONS:
+                            Property<AccelerationDuration> accelerationDuration = new Property<>(AccelerationDuration.class, p);
+                            accelerationDurationsBuilder.add(accelerationDuration);
+                            return accelerationDuration;
                     }
     
                     return null;
@@ -648,6 +663,7 @@ public class Usage {
             drivingModesActivationPeriods = drivingModesActivationPeriodsBuilder;
             drivingModesEnergyConsumptions = drivingModesEnergyConsumptionsBuilder;
             tripMeters = tripMetersBuilder;
+            accelerationDurations = accelerationDurationsBuilder;
         }
     
         public static final class Builder extends SetCommand.Builder<Builder> {
@@ -1148,6 +1164,31 @@ public class Usage {
             public Builder setRecuperationPower(Property<Power> recuperationPower) {
                 Property property = recuperationPower.setIdentifier(PROPERTY_RECUPERATION_POWER);
                 addProperty(property);
+                return this;
+            }
+            
+            /**
+             * Add an array of acceleration durations
+             * 
+             * @param accelerationDurations The acceleration durations. Durations of normal or other accelerations.
+             * @return The builder
+             */
+            public Builder setAccelerationDurations(Property<AccelerationDuration>[] accelerationDurations) {
+                for (int i = 0; i < accelerationDurations.length; i++) {
+                    addAccelerationDuration(accelerationDurations[i]);
+                }
+            
+                return this;
+            }
+            /**
+             * Add a single acceleration duration
+             * 
+             * @param accelerationDuration The acceleration duration. Durations of normal or other accelerations.
+             * @return The builder
+             */
+            public Builder addAccelerationDuration(Property<AccelerationDuration> accelerationDuration) {
+                accelerationDuration.setIdentifier(PROPERTY_ACCELERATION_DURATIONS);
+                addProperty(accelerationDuration);
                 return this;
             }
         }

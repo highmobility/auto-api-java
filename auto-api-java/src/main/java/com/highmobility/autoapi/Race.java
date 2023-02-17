@@ -27,6 +27,7 @@ import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.Acceleration;
+import com.highmobility.autoapi.value.AcceleratorDuration;
 import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.Axle;
 import com.highmobility.autoapi.value.BrakeTorqueVectoring;
@@ -65,6 +66,7 @@ public class Race {
     public static final byte PROPERTY_ACCELERATOR_PEDAL_KICKDOWN_SWITCH = 0x11;
     public static final byte PROPERTY_VEHICLE_MOVING = 0x12;
     public static final byte PROPERTY_DRIVETRAIN_STATE = 0x13;
+    public static final byte PROPERTY_ACCELERATOR_DURATIONS = 0x14;
 
     /**
      * Get Race property availability information
@@ -183,6 +185,7 @@ public class Race {
         Property<ActiveState> acceleratorPedalKickdownSwitch = new Property<>(ActiveState.class, PROPERTY_ACCELERATOR_PEDAL_KICKDOWN_SWITCH);
         Property<VehicleMoving> vehicleMoving = new Property<>(VehicleMoving.class, PROPERTY_VEHICLE_MOVING);
         Property<DrivetrainState> drivetrainState = new Property<>(DrivetrainState.class, PROPERTY_DRIVETRAIN_STATE);
+        List<Property<AcceleratorDuration>> acceleratorDurations;
     
         /**
          * @return The accelerations
@@ -318,6 +321,13 @@ public class Race {
         }
     
         /**
+         * @return Duration during which the accelerator pedal has been pressed more than the given percentage.
+         */
+        public List<Property<AcceleratorDuration>> getAcceleratorDurations() {
+            return acceleratorDurations;
+        }
+    
+        /**
          * @param direction The acceleration type.
          * @return Acceleration for the given acceleration type. Null if doesnt exist.
          */
@@ -350,6 +360,7 @@ public class Race {
     
             final ArrayList<Property<Acceleration>> accelerationsBuilder = new ArrayList<>();
             final ArrayList<Property<BrakeTorqueVectoring>> brakeTorqueVectoringsBuilder = new ArrayList<>();
+            final ArrayList<Property<AcceleratorDuration>> acceleratorDurationsBuilder = new ArrayList<>();
     
             while (propertyIterator.hasNext()) {
                 propertyIterator.parseNextState(p -> {
@@ -379,6 +390,10 @@ public class Race {
                         case PROPERTY_ACCELERATOR_PEDAL_KICKDOWN_SWITCH: return acceleratorPedalKickdownSwitch.update(p);
                         case PROPERTY_VEHICLE_MOVING: return vehicleMoving.update(p);
                         case PROPERTY_DRIVETRAIN_STATE: return drivetrainState.update(p);
+                        case PROPERTY_ACCELERATOR_DURATIONS:
+                            Property<AcceleratorDuration> acceleratorDuration = new Property<>(AcceleratorDuration.class, p);
+                            acceleratorDurationsBuilder.add(acceleratorDuration);
+                            return acceleratorDuration;
                     }
     
                     return null;
@@ -387,6 +402,7 @@ public class Race {
     
             accelerations = accelerationsBuilder;
             brakeTorqueVectorings = brakeTorqueVectoringsBuilder;
+            acceleratorDurations = acceleratorDurationsBuilder;
         }
     
         public static final class Builder extends SetCommand.Builder<Builder> {
@@ -619,6 +635,31 @@ public class Race {
             public Builder setDrivetrainState(Property<DrivetrainState> drivetrainState) {
                 Property property = drivetrainState.setIdentifier(PROPERTY_DRIVETRAIN_STATE);
                 addProperty(property);
+                return this;
+            }
+            
+            /**
+             * Add an array of accelerator durations
+             * 
+             * @param acceleratorDurations The accelerator durations. Duration during which the accelerator pedal has been pressed more than the given percentage.
+             * @return The builder
+             */
+            public Builder setAcceleratorDurations(Property<AcceleratorDuration>[] acceleratorDurations) {
+                for (int i = 0; i < acceleratorDurations.length; i++) {
+                    addAcceleratorDuration(acceleratorDurations[i]);
+                }
+            
+                return this;
+            }
+            /**
+             * Add a single accelerator duration
+             * 
+             * @param acceleratorDuration The accelerator duration. Duration during which the accelerator pedal has been pressed more than the given percentage.
+             * @return The builder
+             */
+            public Builder addAcceleratorDuration(Property<AcceleratorDuration> acceleratorDuration) {
+                acceleratorDuration.setIdentifier(PROPERTY_ACCELERATOR_DURATIONS);
+                addProperty(acceleratorDuration);
                 return this;
             }
         }

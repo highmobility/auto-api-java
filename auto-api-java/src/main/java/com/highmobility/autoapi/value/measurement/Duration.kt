@@ -53,6 +53,7 @@ class Duration : MeasurementType {
             Unit.DAYS -> value * 86400.0
             Unit.WEEKS -> value * 604800.0
             Unit.MONTHS -> value * 2629800.0
+            Unit.MILLISECONDS -> value * 0.001
         }
     }
     
@@ -66,13 +67,16 @@ class Duration : MeasurementType {
     
     fun inMonths() = inSeconds() / 2629800.0
     
+    fun inMilliseconds() = inSeconds() / 0.001
+    
     enum class Unit(val id: Byte) {
         SECONDS(0x00),
         MINUTES(0x01),
         HOURS(0x02),
         DAYS(0x03),
         WEEKS(0x04),
-        MONTHS(0x05);
+        MONTHS(0x05),
+        MILLISECONDS(0x06);
     
         companion object {
             private val map = values().associateBy(Unit::id)

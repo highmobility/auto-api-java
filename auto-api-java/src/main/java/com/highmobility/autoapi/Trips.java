@@ -25,6 +25,7 @@ package com.highmobility.autoapi;
 
 import com.highmobility.autoapi.property.ByteEnum;
 import com.highmobility.autoapi.property.Property;
+import com.highmobility.autoapi.property.PropertyInteger;
 import com.highmobility.autoapi.value.AddressComponent;
 import com.highmobility.autoapi.value.Coordinates;
 import com.highmobility.autoapi.value.EcoDrivingThreshold;
@@ -66,6 +67,7 @@ public class Trips {
     public static final byte PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION = 0x14;
     public static final byte PROPERTY_MAXIMUM_SPEED = 0x15;
     public static final byte PROPERTY_ROAD_TYPE = 0x16;
+    public static final byte PROPERTY_BRAKING_COUNT = 0x17;
 
     /**
      * The trips state
@@ -93,6 +95,7 @@ public class Trips {
         Property<Volume> totalIdleFuelConsumption = new Property<>(Volume.class, PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION);
         Property<Speed> maximumSpeed = new Property<>(Speed.class, PROPERTY_MAXIMUM_SPEED);
         Property<RoadType> roadType = new Property<>(RoadType.class, PROPERTY_ROAD_TYPE);
+        PropertyInteger brakingCount = new PropertyInteger(PROPERTY_BRAKING_COUNT, false);
     
         /**
          * @return Type of the trip
@@ -248,6 +251,13 @@ public class Trips {
             return roadType;
         }
     
+        /**
+         * @return Number of times the brakes were applied during the trip.
+         */
+        public PropertyInteger getBrakingCount() {
+            return brakingCount;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
     
@@ -289,6 +299,7 @@ public class Trips {
                         case PROPERTY_TOTAL_IDLE_FUEL_CONSUMPTION: return totalIdleFuelConsumption.update(p);
                         case PROPERTY_MAXIMUM_SPEED: return maximumSpeed.update(p);
                         case PROPERTY_ROAD_TYPE: return roadType.update(p);
+                        case PROPERTY_BRAKING_COUNT: return brakingCount.update(p);
                     }
     
                     return null;
@@ -578,6 +589,16 @@ public class Trips {
                 addProperty(property);
                 return this;
             }
+            
+            /**
+             * @param brakingCount Number of times the brakes were applied during the trip.
+             * @return The builder
+             */
+            public Builder setBrakingCount(Property<Integer> brakingCount) {
+                Property property = new PropertyInteger(PROPERTY_BRAKING_COUNT, false, 2, brakingCount);
+                addProperty(property);
+                return this;
+            }
         }
     }
 
@@ -618,7 +639,8 @@ public class Trips {
         SHARP_TURN((byte) 0x02),
         OVER_RPM((byte) 0x03),
         OVERSPEED((byte) 0x04),
-        IDLING_ENGINE_ON((byte) 0x05);
+        IDLING_ENGINE_ON((byte) 0x05),
+        EMERGENCY_BRAKING((byte) 0x06);
     
         public static Event fromByte(byte byteValue) throws CommandParseException {
             Event[] values = Event.values();

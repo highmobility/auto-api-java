@@ -107,6 +107,7 @@ public class Diagnostics {
     public static final byte PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE = 0x35;
     public static final byte PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL = 0x36;
     public static final byte PROPERTY_ENGINE_OIL_SERVICE_STATUS = 0x37;
+    public static final byte PROPERTY_PASSENGER_AIRBAG_STATUS = 0x38;
 
     /**
      * Get Diagnostics property availability information
@@ -257,6 +258,7 @@ public class Diagnostics {
         Property<Duration> engineTimeToNextService = new Property<>(Duration.class, PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE);
         Property<LowVoltageBatteryChargeLevel> lowVoltageBatteryChargeLevel = new Property<>(LowVoltageBatteryChargeLevel.class, PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL);
         Property<ServiceStatus> engineOilServiceStatus = new Property<>(ServiceStatus.class, PROPERTY_ENGINE_OIL_SERVICE_STATUS);
+        Property<ActiveState> passengerAirbagStatus = new Property<>(ActiveState.class, PROPERTY_PASSENGER_AIRBAG_STATUS);
     
         /**
          * @return The vehicle mileage (odometer)
@@ -621,6 +623,13 @@ public class Diagnostics {
             return engineOilServiceStatus;
         }
     
+        /**
+         * @return Passenger airbag is activated or not
+         */
+        public Property<ActiveState> getPassengerAirbagStatus() {
+            return passengerAirbagStatus;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
     
@@ -723,6 +732,7 @@ public class Diagnostics {
                         case PROPERTY_ENGINE_TIME_TO_NEXT_SERVICE: return engineTimeToNextService.update(p);
                         case PROPERTY_LOW_VOLTAGE_BATTERY_CHARGE_LEVEL: return lowVoltageBatteryChargeLevel.update(p);
                         case PROPERTY_ENGINE_OIL_SERVICE_STATUS: return engineOilServiceStatus.update(p);
+                        case PROPERTY_PASSENGER_AIRBAG_STATUS: return passengerAirbagStatus.update(p);
                     }
     
                     return null;
@@ -1441,6 +1451,16 @@ public class Diagnostics {
              */
             public Builder setEngineOilServiceStatus(Property<ServiceStatus> engineOilServiceStatus) {
                 Property property = engineOilServiceStatus.setIdentifier(PROPERTY_ENGINE_OIL_SERVICE_STATUS);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param passengerAirbagStatus Passenger airbag is activated or not
+             * @return The builder
+             */
+            public Builder setPassengerAirbagStatus(Property<ActiveState> passengerAirbagStatus) {
+                Property property = passengerAirbagStatus.setIdentifier(PROPERTY_PASSENGER_AIRBAG_STATUS);
                 addProperty(property);
                 return this;
             }
