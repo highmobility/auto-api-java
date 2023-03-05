@@ -11,7 +11,7 @@ sourceCompatibility = '1.8'
 
 ext.ver = [
         "hmkit-utils"       : "1.4.5",
-        "hmkit-auto-api"    : "13.1.1"
+        "hmkit-auto-api"    : "13.2.0"
 ]
 
 ext.deps = ["utils"   : "com.high-mobility:hmkit-utils:${ver."hmkit-utils"}",

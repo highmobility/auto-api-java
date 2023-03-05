@@ -121,6 +121,7 @@ public class Charging {
     public static final byte PROPERTY_BATTERY_TEMPERATURE_EXTREMES = 0x42;
     public static final byte PROPERTY_DRIVING_MODE_PHEV = 0x43;
     public static final byte PROPERTY_BATTERY_CHARGE_TYPE = 0x44;
+    public static final byte PROPERTY_DISTANCE_TO_COMPLETE_CHARGE = 0x45;
 
     /**
      * Get Charging property availability information
@@ -575,6 +576,7 @@ public class Charging {
         Property<TemperatureExtreme> batteryTemperatureExtremes = new Property<>(TemperatureExtreme.class, PROPERTY_BATTERY_TEMPERATURE_EXTREMES);
         Property<DrivingModePhev> drivingModePHEV = new Property<>(DrivingModePhev.class, PROPERTY_DRIVING_MODE_PHEV);
         Property<BatteryChargeType> batteryChargeType = new Property<>(BatteryChargeType.class, PROPERTY_BATTERY_CHARGE_TYPE);
+        Property<Length> distanceToCompleteCharge = new Property<>(Length.class, PROPERTY_DISTANCE_TO_COMPLETE_CHARGE);
     
         /**
          * @return Estimated range
@@ -1043,6 +1045,13 @@ public class Charging {
             return batteryChargeType;
         }
     
+        /**
+         * @return Distance until charging completed
+         */
+        public Property<Length> getDistanceToCompleteCharge() {
+            return distanceToCompleteCharge;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
     
@@ -1127,6 +1136,7 @@ public class Charging {
                         case PROPERTY_BATTERY_TEMPERATURE_EXTREMES: return batteryTemperatureExtremes.update(p);
                         case PROPERTY_DRIVING_MODE_PHEV: return drivingModePHEV.update(p);
                         case PROPERTY_BATTERY_CHARGE_TYPE: return batteryChargeType.update(p);
+                        case PROPERTY_DISTANCE_TO_COMPLETE_CHARGE: return distanceToCompleteCharge.update(p);
                     }
     
                     return null;
@@ -1855,6 +1865,16 @@ public class Charging {
              */
             public Builder setBatteryChargeType(Property<BatteryChargeType> batteryChargeType) {
                 Property property = batteryChargeType.setIdentifier(PROPERTY_BATTERY_CHARGE_TYPE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param distanceToCompleteCharge Distance until charging completed
+             * @return The builder
+             */
+            public Builder setDistanceToCompleteCharge(Property<Length> distanceToCompleteCharge) {
+                Property property = distanceToCompleteCharge.setIdentifier(PROPERTY_DISTANCE_TO_COMPLETE_CHARGE);
                 addProperty(property);
                 return this;
             }
