@@ -2,12 +2,13 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
 }
 
-apply plugin: "java-library"
-apply from: "deploy.gradle"
-apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/deploy-java-mavenCentral.gradle"
-apply from: "https://raw.githubusercontent.com/tonisives/tools/master/gradle/jupiter-test-shell-logging.gradle"
-
 sourceCompatibility = '1.8'
+
+apply plugin: "java-library"
+
+// publish settings
+apply from: "../gradle/deploy-ossrh.gradle"
+apply from: "https://raw.githubusercontent.com/tonisives/tools/master/scripts/jupiter-test-shell-logging.gradle"
 
 ext.ver = [
         "hmkit-utils"       : "1.4.5",
