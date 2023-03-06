@@ -1,7 +1,7 @@
 # Changelog
 
-## [13.2.0]
-- Update to latest [auto api branch](https://github.com/highmobility/auto-api/pull/63/commits/06905522ba2c10c96bdd2899b4148ddc47a29a58)
+## [13.2.1]
+- Update to latest [auto api branch](https://github.com/highmobility/auto-api/commit/06905522ba2c10c96bdd2899b4148ddc47a29a58)
 
 ## [13.1.1]
 

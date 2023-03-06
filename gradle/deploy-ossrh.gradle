@@ -1,0 +1,147 @@
+/*
+# MavenCentral release task for a Java/Android library
+from https://github.com/kit-data-manager/nexus-publish-example#automated-publishing-via-github-actions
+
+## Requirements
+
+- gradle.properties file in the project's root folder with
+version=0.0.1
+
+env variables in Github Actions
+
+MAVEN_SIGNING_KEY=
+MAVEN_SIGNING_PASSWORD=
+OSSRH_PASSWORD=
+OSSRH_USERNAME=
+
+OR
+
+~/.gradle/gradle.properties with
+sonatypeUsername=
+sonatypePassword=
+signing.keyId=
+signing.password=
+signing.secretKeyRingFile=
+to deploy locally
+
+- gpg keypair created and uploaded to hkp://pool.sks-keyservers.net
+
+*/
+
+apply plugin: "maven-publish"
+apply plugin: 'signing'
+apply plugin: 'net.researchgate.release'
+
+def deploySiteUrl="https://github.com/highmobility/auto-api-java"
+def deployGitUrl="https://github.com/highmobility/auto-api-java"
+def deployGroupId="com.high-mobility"
+def deployLicenseName="MIT"
+def deployLicenseUrl="https://opensource.org/licenses/MIT"
+def deployId=name
+
+def isAndroid = project.plugins.findPlugin("com.android.library")
+
+// plugin net.researchgate.release(https://github.com/researchgate/gradle-release)
+// It updates the version and creates automatic commits
+release {
+    //define template for tagging, e.g. v1.0.0
+    tagTemplate = 'v${version}'
+    //set source file of version property
+    versionPropertyFile = '../gradle.properties'
+    //set possible properties which may contain the version
+    versionProperties = ['version', 'mainversion']
+    git {
+        // branch from where to release (default: master)
+        // https://github.com/researchgate/gradle-release/issues/357
+        requireBranch.set('main')
+    }
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+
+            // get aar or jar for android/java libs
+            if (isAndroid) {
+                task sourceJar(type: Jar) {
+                    from android.sourceSets.main.java.srcDirs
+                    classifier "sources"
+                }
+
+                artifact(sourceJar)
+                artifact("$buildDir/outputs/aar/${deployId}-release.aar")
+            } else {
+                java {
+                    withJavadocJar()
+                    withSourcesJar()
+                }
+
+                from components.java
+            }
+
+            groupId = deployGroupId
+            artifactId = deployId
+
+            pom {
+                name = deployId
+                url = deploySiteUrl
+                inceptionYear = '2020'
+                description = deployId
+                licenses {
+                    license {
+                        name = deployLicenseName
+                        url = deployLicenseUrl
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'tonis'
+                        name = 'Tonis Tiganik'
+                        email = 'ttiganik@high-mobility.com'
+                    }
+                    developer {
+                        id = 'kevin'
+                        name = 'Kevin Valdek'
+                        email = 'kevin@high-mobility.com'
+                    }
+                }
+                scm {
+                    connection = deployGitUrl
+                    developerConnection = deployGitUrl
+                    url = deploySiteUrl
+                }
+
+                if (isAndroid) {
+                    // needed for .aar transitive dependencies
+                    withXml {
+                        def dependenciesNode = asNode()['dependencies'][0] ?: asNode().appendNode('dependencies')
+                        configurations.implementation.allDependencies.each {
+                            if (it.name != 'unspecified') {
+                                def dependencyNode = dependenciesNode.appendNode('dependency')
+                                dependencyNode.appendNode('groupId', it.group)
+                                dependencyNode.appendNode('artifactId', it.name)
+
+                                if (it.version == "unspecified") {
+                                    throw new GradleException("dependency version is unspecified " + "for $deployId submodule $it.name, node $it")
+                                } else {
+                                    dependencyNode.appendNode('version', it.version)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+signing {
+    if (project.hasProperty("signingKey")) {
+        def signingKey = findProperty("signingKey")
+        def signingPassword = findProperty("signingPassword")
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications.release
+    } else {
+        println 'WARNING: No property \'signingKey\' found. Artifact signing will be skipped.'
+    }
+}
