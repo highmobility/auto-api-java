@@ -30,8 +30,14 @@ ext {
     ]
 }
 
-allprojects {
+group = "com.high-mobility"
+
+subprojects {
     repositories {
         mavenCentral()
     }
+
+    // nexus-publish plugin needs to be in root build.gradle 2 times
+    // https://github.com/gradle-nexus/publish-plugin/issues/81
+    group = "com.high-mobility"
 }
