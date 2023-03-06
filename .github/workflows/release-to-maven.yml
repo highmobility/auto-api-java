@@ -19,7 +19,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Publish package
-        run: ./gradlew -Prelease :auto-api-java:publishToSonatype closeAndReleaseSonatypeStagingRepository
+        run: ./gradlew -Prelease :auto-api-java:publishToSonatype closeSonatypeStagingRepository
         env:
           ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.OSSRH_USERNAME }}
           ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.OSSRH_PASSWORD }}
