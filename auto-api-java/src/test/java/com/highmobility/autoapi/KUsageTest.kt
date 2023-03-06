@@ -89,7 +89,9 @@ class KUsageTest : BaseTest() {
             "29000D01000A0d00402670a3d70a3d71" +  // Average consumption is 11.22kWh/100km
             "2a000B0100083fe6666666666666" +  // Braking is evaluated at 70%
             "2b000D01000A16014053600000000000" +  // Average speed is 77.5km/h.
-            "2c000D01000A140040a1f80000000000" // Recuperation energy is 2300.0W.
+            "2c000D01000A140040a1f80000000000" +  // Recuperation energy is 2300.0W.
+            "2d000F01000C000007064093480000000000" +  // Normal longitudinal acceleration lasted 1234.0ms.
+            "2d000F01000C010107064093480000000000" // Positive outlier lateral acceleration lasted 1234.0ms.
     )
     
     @Test
@@ -156,6 +158,8 @@ class KUsageTest : BaseTest() {
         builder.setBrakingEvaluation(Property(0.7))
         builder.setAverageSpeed(Property(Speed(77.5, Speed.Unit.KILOMETERS_PER_HOUR)))
         builder.setRecuperationPower(Property(Power(2300.0, Power.Unit.WATTS)))
+        builder.addAccelerationDuration(Property(AccelerationDuration(AccelerationDuration.Direction.LONGITUDINAL, AccelerationDuration.Type.REGULAR, Duration(1234.0, Duration.Unit.MILLISECONDS))))
+        builder.addAccelerationDuration(Property(AccelerationDuration(AccelerationDuration.Direction.LATERAL, AccelerationDuration.Type.POSITIVE_OUTLIER, Duration(1234.0, Duration.Unit.MILLISECONDS))))
         testState(builder.build())
     }
     
@@ -267,6 +271,14 @@ class KUsageTest : BaseTest() {
         assertTrue(state.averageSpeed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
         assertTrue(state.recuperationPower.value?.value == 2300.0)
         assertTrue(state.recuperationPower.value?.unit == Power.Unit.WATTS)
+        assertTrue(state.accelerationDurations[0].value?.direction == AccelerationDuration.Direction.LONGITUDINAL)
+        assertTrue(state.accelerationDurations[0].value?.type == AccelerationDuration.Type.REGULAR)
+        assertTrue(state.accelerationDurations[0].value?.duration?.value == 1234.0)
+        assertTrue(state.accelerationDurations[0].value?.duration?.unit == Duration.Unit.MILLISECONDS)
+        assertTrue(state.accelerationDurations[1].value?.direction == AccelerationDuration.Direction.LATERAL)
+        assertTrue(state.accelerationDurations[1].value?.type == AccelerationDuration.Type.POSITIVE_OUTLIER)
+        assertTrue(state.accelerationDurations[1].value?.duration?.value == 1234.0)
+        assertTrue(state.accelerationDurations[1].value?.duration?.unit == Duration.Unit.MILLISECONDS)
         assertTrue(bytesTheSame(state, bytes))
     }
     
@@ -277,10 +289,10 @@ class KUsageTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0068000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c")
-        val propertyGetter = Usage.GetUsage(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "0068000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d")
+        val propertyGetter = Usage.GetUsage(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d"))
     }
     
     @Test
@@ -303,14 +315,14 @@ class KUsageTest : BaseTest() {
     
     @Test
     fun testGetUsageAvailabilitySome() {
-        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c")
+        val identifierBytes = Bytes("0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d")
         val allBytes = Bytes(COMMAND_HEADER + "006802" + identifierBytes)
         val constructed = Usage.GetUsageAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.USAGE)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Usage.GetUsageAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c)
+        val secondConstructed = Usage.GetUsageAvailability(0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

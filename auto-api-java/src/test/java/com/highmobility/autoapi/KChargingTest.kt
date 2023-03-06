@@ -101,7 +101,10 @@ class KChargingTest : BaseTest() {
             "3f000401000101" +  // Battery is in an active state.
             "40000401000100" +  // State of battery LED is no colour.
             "41000D01000A1701404fb33333333333" +  // Battery cooling temperature is 63.4C.
-            "42000E01000B0017014055400000000000" // Battery highest temperature is 85.0C.
+            "42000E01000B0017014055400000000000" +  // Battery highest temperature is 85.0C.
+            "43000401000105" +  // Driving mode for PHEV is hybrid parallel.
+            "44000401000104" +  // Battery charge type is quick.
+            "45000D01000A1204405e200000000000" // Distance to complete charge is 120.5 kilometers.
     )
     
     @Test
@@ -180,6 +183,9 @@ class KChargingTest : BaseTest() {
         builder.setBatteryLed(Property(Charging.BatteryLed.NO_COLOUR))
         builder.setBatteryCoolingTemperature(Property(Temperature(63.4, Temperature.Unit.CELSIUS)))
         builder.setBatteryTemperatureExtremes(Property(TemperatureExtreme(TemperatureExtreme.Extreme.HIGHEST, Temperature(85.0, Temperature.Unit.CELSIUS))))
+        builder.setDrivingModePHEV(Property(DrivingModePhev.HYBRID_PARALLEL))
+        builder.setBatteryChargeType(Property(Charging.BatteryChargeType.QUICK))
+        builder.setDistanceToCompleteCharge(Property(Length(120.5, Length.Unit.KILOMETERS)))
         testState(builder.build())
     }
     
@@ -295,6 +301,10 @@ class KChargingTest : BaseTest() {
         assertTrue(state.batteryTemperatureExtremes.value?.extreme == TemperatureExtreme.Extreme.HIGHEST)
         assertTrue(state.batteryTemperatureExtremes.value?.temperature?.value == 85.0)
         assertTrue(state.batteryTemperatureExtremes.value?.temperature?.unit == Temperature.Unit.CELSIUS)
+        assertTrue(state.drivingModePHEV.value == DrivingModePhev.HYBRID_PARALLEL)
+        assertTrue(state.batteryChargeType.value == Charging.BatteryChargeType.QUICK)
+        assertTrue(state.distanceToCompleteCharge.value?.value == 120.5)
+        assertTrue(state.distanceToCompleteCharge.value?.unit == Length.Unit.KILOMETERS)
         assertTrue(bytesTheSame(state, bytes))
     }
     
@@ -305,10 +315,10 @@ class KChargingTest : BaseTest() {
         assertTrue(defaultGetter == defaultGetterBytes)
         assertTrue(defaultGetter.getPropertyIdentifiers().isEmpty())
         
-        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00230002030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142")
-        val propertyGetter = Charging.GetState(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42)
+        val propertyGetterBytes = Bytes(COMMAND_HEADER + "00230002030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445")
+        val propertyGetter = Charging.GetState(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42, 0x43, 0x44, 0x45)
         assertTrue(propertyGetter == propertyGetterBytes)
-        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142"))
+        assertTrue(propertyGetter.getPropertyIdentifiers() == Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445"))
     }
     
     @Test
@@ -331,14 +341,14 @@ class KChargingTest : BaseTest() {
     
     @Test
     fun testGetStateAvailabilitySome() {
-        val identifierBytes = Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142")
+        val identifierBytes = Bytes("02030405060708090a0b0c0e0f1011131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445")
         val allBytes = Bytes(COMMAND_HEADER + "002302" + identifierBytes)
         val constructed = Charging.GetStateAvailability(identifierBytes)
         assertTrue(constructed.identifier == Identifier.CHARGING)
         assertTrue(constructed.type == Type.GET_AVAILABILITY)
         assertTrue(constructed.getPropertyIdentifiers() == identifierBytes)
         assertTrue(constructed == allBytes)
-        val secondConstructed = Charging.GetStateAvailability(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42)
+        val secondConstructed = Charging.GetStateAvailability(0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42, 0x43, 0x44, 0x45)
         assertTrue(constructed == secondConstructed)
     
         setEnvironment(CommandResolver.Environment.VEHICLE)

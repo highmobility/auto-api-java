@@ -70,7 +70,8 @@ class KTripsTest : BaseTest() {
             "13000D01000A19024037666666666666" +  // Total fuel consumption during the trip was 23.4 l
             "14000D01000A19024004000000000000" +  // Since the last ignition the vehicle has consumed 2.5 l while ideling.
             "15000D01000A16014050d33333333333" +  // Maximum speed since last ignition on is 67.3km/h
-            "16000401000101" // Road was of local type.
+            "16000401000101" +  // Road was of local type.
+            "17000501000200a1" // Brakes were applied 161 times during the trip.
     )
     
     @Test
@@ -119,6 +120,7 @@ class KTripsTest : BaseTest() {
         builder.setTotalIdleFuelConsumption(Property(Volume(2.5, Volume.Unit.LITERS)))
         builder.setMaximumSpeed(Property(Speed(67.3, Speed.Unit.KILOMETERS_PER_HOUR)))
         builder.setRoadType(Property(Trips.RoadType.LOCAL))
+        builder.setBrakingCount(Property(161))
         testState(builder.build())
     }
     
@@ -187,6 +189,7 @@ class KTripsTest : BaseTest() {
         assertTrue(state.maximumSpeed.value?.value == 67.3)
         assertTrue(state.maximumSpeed.value?.unit == Speed.Unit.KILOMETERS_PER_HOUR)
         assertTrue(state.roadType.value == Trips.RoadType.LOCAL)
+        assertTrue(state.brakingCount.value == 161)
         assertTrue(bytesTheSame(state, bytes))
     }
 }

@@ -277,7 +277,9 @@ public class DashboardLight extends PropertyValueObject {
         TIRE_UNDER_INFLATION((byte) 0xc0),
         WHEEL_PRESSURE_FAULT((byte) 0xc1),
         OIL_CHANGE_WARNING((byte) 0xc2),
-        INSPECTION_WARNING((byte) 0xc3);
+        INSPECTION_WARNING((byte) 0xc3),
+        DIESEL_OIL_FILTER_WATER_PRESENCE((byte) 0xc4),
+        ENGINE_DRAG_TORQUE_CONTROL_FAILURE((byte) 0xc5);
     
         public static Name fromByte(byte byteValue) throws CommandParseException {
             Name[] values = Name.values();

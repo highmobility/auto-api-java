@@ -28,6 +28,7 @@ import com.highmobility.autoapi.property.Property;
 import com.highmobility.autoapi.value.ActiveState;
 import com.highmobility.autoapi.value.ChargingRestriction;
 import com.highmobility.autoapi.value.DepartureTime;
+import com.highmobility.autoapi.value.DrivingModePhev;
 import com.highmobility.autoapi.value.EnabledState;
 import com.highmobility.autoapi.value.LockState;
 import com.highmobility.autoapi.value.Position;
@@ -118,6 +119,9 @@ public class Charging {
     public static final byte PROPERTY_BATTERY_LED = 0x40;
     public static final byte PROPERTY_BATTERY_COOLING_TEMPERATURE = 0x41;
     public static final byte PROPERTY_BATTERY_TEMPERATURE_EXTREMES = 0x42;
+    public static final byte PROPERTY_DRIVING_MODE_PHEV = 0x43;
+    public static final byte PROPERTY_BATTERY_CHARGE_TYPE = 0x44;
+    public static final byte PROPERTY_DISTANCE_TO_COMPLETE_CHARGE = 0x45;
 
     /**
      * Get Charging property availability information
@@ -243,7 +247,8 @@ public class Charging {
                 status == Status.FAST_CHARGING ||
                 status == Status.DISCHARGING ||
                 status == Status.FOREIGN_OBJECT_DETECTED ||
-                status == Status.CONDITIONING) throw new IllegalArgumentException();
+                status == Status.CONDITIONING ||
+                status == Status.FLAP_OPEN) throw new IllegalArgumentException();
         
             addProperty(this.status.update(status));
             createBytes();
@@ -569,6 +574,9 @@ public class Charging {
         Property<BatteryLed> batteryLed = new Property<>(BatteryLed.class, PROPERTY_BATTERY_LED);
         Property<Temperature> batteryCoolingTemperature = new Property<>(Temperature.class, PROPERTY_BATTERY_COOLING_TEMPERATURE);
         Property<TemperatureExtreme> batteryTemperatureExtremes = new Property<>(TemperatureExtreme.class, PROPERTY_BATTERY_TEMPERATURE_EXTREMES);
+        Property<DrivingModePhev> drivingModePHEV = new Property<>(DrivingModePhev.class, PROPERTY_DRIVING_MODE_PHEV);
+        Property<BatteryChargeType> batteryChargeType = new Property<>(BatteryChargeType.class, PROPERTY_BATTERY_CHARGE_TYPE);
+        Property<Length> distanceToCompleteCharge = new Property<>(Length.class, PROPERTY_DISTANCE_TO_COMPLETE_CHARGE);
     
         /**
          * @return Estimated range
@@ -1023,6 +1031,27 @@ public class Charging {
             return batteryTemperatureExtremes;
         }
     
+        /**
+         * @return Indicates the current driving mode for Plug-In Hybrid Vehicle.
+         */
+        public Property<DrivingModePhev> getDrivingModePHEV() {
+            return drivingModePHEV;
+        }
+    
+        /**
+         * @return Battery charge type.
+         */
+        public Property<BatteryChargeType> getBatteryChargeType() {
+            return batteryChargeType;
+        }
+    
+        /**
+         * @return Distance until charging completed
+         */
+        public Property<Length> getDistanceToCompleteCharge() {
+            return distanceToCompleteCharge;
+        }
+    
         State(byte[] bytes) {
             super(bytes);
     
@@ -1105,6 +1134,9 @@ public class Charging {
                         case PROPERTY_BATTERY_LED: return batteryLed.update(p);
                         case PROPERTY_BATTERY_COOLING_TEMPERATURE: return batteryCoolingTemperature.update(p);
                         case PROPERTY_BATTERY_TEMPERATURE_EXTREMES: return batteryTemperatureExtremes.update(p);
+                        case PROPERTY_DRIVING_MODE_PHEV: return drivingModePHEV.update(p);
+                        case PROPERTY_BATTERY_CHARGE_TYPE: return batteryChargeType.update(p);
+                        case PROPERTY_DISTANCE_TO_COMPLETE_CHARGE: return distanceToCompleteCharge.update(p);
                     }
     
                     return null;
@@ -1816,6 +1848,36 @@ public class Charging {
                 addProperty(property);
                 return this;
             }
+            
+            /**
+             * @param drivingModePHEV Indicates the current driving mode for Plug-In Hybrid Vehicle.
+             * @return The builder
+             */
+            public Builder setDrivingModePHEV(Property<DrivingModePhev> drivingModePHEV) {
+                Property property = drivingModePHEV.setIdentifier(PROPERTY_DRIVING_MODE_PHEV);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param batteryChargeType Battery charge type.
+             * @return The builder
+             */
+            public Builder setBatteryChargeType(Property<BatteryChargeType> batteryChargeType) {
+                Property property = batteryChargeType.setIdentifier(PROPERTY_BATTERY_CHARGE_TYPE);
+                addProperty(property);
+                return this;
+            }
+            
+            /**
+             * @param distanceToCompleteCharge Distance until charging completed
+             * @return The builder
+             */
+            public Builder setDistanceToCompleteCharge(Property<Length> distanceToCompleteCharge) {
+                Property property = distanceToCompleteCharge.setIdentifier(PROPERTY_DISTANCE_TO_COMPLETE_CHARGE);
+                addProperty(property);
+                return this;
+            }
         }
     }
 
@@ -1957,7 +2019,8 @@ public class Charging {
         FAST_CHARGING((byte) 0x08),
         DISCHARGING((byte) 0x09),
         FOREIGN_OBJECT_DETECTED((byte) 0x0a),
-        CONDITIONING((byte) 0x0b);
+        CONDITIONING((byte) 0x0b),
+        FLAP_OPEN((byte) 0x0c);
     
         public static Status fromByte(byte byteValue) throws CommandParseException {
             Status[] values = Status.values();
@@ -2438,6 +2501,43 @@ public class Charging {
         private final byte value;
     
         BatteryLed(byte value) {
+            this.value = value;
+        }
+    
+        @Override public byte getByte() {
+            return value;
+        }
+    }
+
+    public enum BatteryChargeType implements ByteEnum {
+        NO_CHARGE((byte) 0x00),
+        NORMAL((byte) 0x01),
+        ACCELERATED((byte) 0x02),
+        FAST((byte) 0x03),
+        QUICK((byte) 0x04),
+        ULTRA_FAST((byte) 0x05),
+        NOT_USED((byte) 0x06),
+        VEHICLE_TO_HOME((byte) 0x07),
+        VEHICLE_TO_GRID((byte) 0x08);
+    
+        public static BatteryChargeType fromByte(byte byteValue) throws CommandParseException {
+            BatteryChargeType[] values = BatteryChargeType.values();
+    
+            for (int i = 0; i < values.length; i++) {
+                BatteryChargeType state = values[i];
+                if (state.getByte() == byteValue) {
+                    return state;
+                }
+            }
+    
+            throw new CommandParseException(
+                enumValueDoesNotExist(BatteryChargeType.class.getSimpleName(), byteValue)
+            );
+        }
+    
+        private final byte value;
+    
+        BatteryChargeType(byte value) {
             this.value = value;
         }
     
