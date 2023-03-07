@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-  implementation('com.highmobility:hmkit-auto-api:{version}')
+  implementation('com.high-mobility:hmkit-auto-api:{version}')
 }
 ```
 
