@@ -1,13 +1,4 @@
-buildscript {
-    ext.kotlinVersion = "1.7.20"
-
-    repositories {
-        mavenCentral()
-    }
-}
-
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
     id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
     id 'net.researchgate.release' version '3.0.2'
 }
@@ -19,6 +10,8 @@ nexusPublishing {
 }
 
 ext {
+    kotlinVersion = "1.7.20"
+
     ver = [
             "hmkit-utils"   : "1.4.5",
             "hmkit-auto-api": "13.2.0"

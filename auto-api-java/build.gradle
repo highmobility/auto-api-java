@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm'
+    id 'org.jetbrains.kotlin.jvm' version "$kotlinVersion"
 }
 
 sourceCompatibility = '1.8'
@@ -25,7 +25,7 @@ dependencies {
         api deps.utils
     }
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     implementation 'org.slf4j:slf4j-api:1.7.25'
 
     implementation deps.findBugs // for @Nullable
