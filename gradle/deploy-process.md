@@ -13,5 +13,5 @@ Only patch number is incremented automatically on merge. To update major/minor, 
 ## Make a test release locally to staging
 
 - comment out line `useInMemoryPgpKeys(signingKey, signingPassword)` in deploy-ossrh.gradle
-- Update version in `$projectRoot/gradle.properties` and call `./gradlew -Prelease :hmkit-fleet:publishToSonatype`.
+- Update version in `$projectRoot/gradle.properties` and call `./gradlew -Prelease :auto-api-java:publishToSonatype`.
 - Don't merge test version names to main

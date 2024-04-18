@@ -1,5 +1,10 @@
 # Changelog
 
+## [13.2.1]
+
+### Fixed
+- Package name in Maven Central
+
 ## [13.2.0]
 - Update to latest [auto api branch](https://github.com/highmobility/auto-api/commit/06905522ba2c10c96bdd2899b4148ddc47a29a58)
 
